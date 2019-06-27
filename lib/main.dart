@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_weight_tracking_app/widgets/alert.dart';
 
 import 'appthemes.dart';
@@ -16,27 +17,50 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  static const String LIST_WEIGHTS = "weights";
+  TextEditingController _weightController;
+  SharedPreferences prefs;
+  List<String> weights;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
-      backgroundColor: AppThemes.BLUE,
-      body: Container(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppThemes.YELLOW,
-        child: Icon(Icons.add),
-        onPressed: () {
-          _onAlertWithCustomContentPressed(context);
-        },
-      ),
-    );
+    return prefs == null
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+            backgroundColor: AppThemes.BLUE,
+            body: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+            backgroundColor: AppThemes.BLUE,
+            body: ListView.builder(
+              itemCount: weights.length,
+              itemBuilder: (context, index) {
+                return Text(weights[index]);
+              },
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: AppThemes.YELLOW,
+              child: Icon(Icons.add),
+              onPressed: () {
+                _onAlertWithCustomContentPressed(context);
+              },
+            ),
+          );
   }
 
-// Alert custom content
   _onAlertWithCustomContentPressed(context) {
     CustomAlert(
         context: context,
@@ -48,6 +72,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: 100.0,
                 child: TextField(
+                  controller: _weightController,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
@@ -63,12 +88,32 @@ class HomeScreen extends StatelessWidget {
         ),
         buttons: [
           DialogButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => _incrementCounter(context),
             child: Text(
               "Añadir peso",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           )
         ]).show();
+  }
+
+  _incrementCounter(context) {
+    setState(() {
+      weights.add(_weightController.text);
+      prefs.setStringList(LIST_WEIGHTS, weights);
+    });
+    Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    _weightController = TextEditingController();
+    SharedPreferences.getInstance().then((_instance) {
+      setState(() {
+        prefs = _instance;
+        weights = prefs.getStringList(LIST_WEIGHTS) ?? [];
+      });
+    });
+    super.initState();
   }
 }

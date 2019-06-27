@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/widgets/alert.dart';
+import 'package:simple_weight_tracking_app/widgets/weekly_chart.dart';
 
 import 'appthemes.dart';
 
@@ -26,7 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   static const String LIST_WEIGHTS = "weights";
   TextEditingController _weightController;
   SharedPreferences prefs;
-  List<String> weights;
+  List<String> sharedValues = [];
+  List<Weight> weights = [];
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: 0.0,
             ),
             backgroundColor: AppThemes.BLUE,
-            body: ListView.builder(
-              itemCount: weights.length,
-              itemBuilder: (context, index) {
-                return Text(weights[index]);
-              },
-            ),
+            body: sample3(context, weights),
             floatingActionButton: FloatingActionButton(
               backgroundColor: AppThemes.YELLOW,
               child: Icon(Icons.add),
@@ -99,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _incrementCounter(context) {
     setState(() {
-      weights.add(_weightController.text);
-      prefs.setStringList(LIST_WEIGHTS, weights);
+      sharedValues.add(_weightController.text);
+      prefs.setStringList(LIST_WEIGHTS, sharedValues);
     });
     Navigator.pop(context);
   }
@@ -111,7 +109,10 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences.getInstance().then((_instance) {
       setState(() {
         prefs = _instance;
-        weights = prefs.getStringList(LIST_WEIGHTS) ?? [];
+        sharedValues = prefs.getStringList(LIST_WEIGHTS) ?? [];
+        for (int i = 0; i < sharedValues.length; i++) {
+          weights.add(Weight(double.parse(sharedValues[i]), DateTime.now().subtract(Duration(days: i))));
+        }
       });
     });
     super.initState();

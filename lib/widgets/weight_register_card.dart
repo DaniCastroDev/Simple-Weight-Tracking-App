@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
-import 'package:simple_weight_tracking_app/model/weight.dart';
+import 'package:simple_weight_tracking_app/model/weights.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
 
 class WeightRegisterCard extends StatelessWidget {
   final Weight weight;
+  final double difference;
 
-  const WeightRegisterCard({Key key, this.weight}) : super(key: key);
+  const WeightRegisterCard({Key key, this.weight, this.difference}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color difference;
+    Color differenceColor;
     IconData icon;
 
-    if (weight.difference != null) {
-      if (weight.difference > 0) {
+    if (difference != null) {
+      if (difference > 0) {
         icon = Icons.arrow_upward;
-        difference = Colors.red;
-      } else if (weight.difference < 0) {
+        differenceColor = Colors.red;
+      } else if (difference < 0) {
         icon = Icons.arrow_downward;
-        difference = AppThemes.CYAN;
+        differenceColor = AppThemes.CYAN;
       } else {
         icon = Icons.arrow_forward;
-        difference = Colors.yellow;
+        differenceColor = Colors.yellow;
       }
     }
     return Card(
@@ -39,7 +40,7 @@ class WeightRegisterCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '${displayDate(weight.dateTime)}',
+                  '${displayDate(weight.date)}',
                   style: TextStyle(color: AppThemes.GREY, fontSize: 14.0),
                 ),
                 Row(
@@ -47,11 +48,11 @@ class WeightRegisterCard extends StatelessWidget {
                     Container(
                       height: 30.0,
                     ),
-                    icon != null ? Icon(icon, color: difference) : Container(),
+                    icon != null ? Icon(icon, color: differenceColor) : Container(),
                     icon != null
                         ? Text(
-                            '${weight.difference.abs().toStringAsFixed(2)} kg',
-                            style: TextStyle(color: difference, fontWeight: FontWeight.bold),
+                            '${difference.abs().toStringAsFixed(2)} kg',
+                            style: TextStyle(color: differenceColor, fontWeight: FontWeight.bold),
                           )
                         : Container(),
                   ],

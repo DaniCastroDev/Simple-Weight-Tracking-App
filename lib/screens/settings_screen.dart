@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
+import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/utils/sharedprefs_constants.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 
@@ -35,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Ajustes',
+                  DemoLocalizations.of(context).settings,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
                 ),
               ),
@@ -50,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
                 child: Text(
-                  'GUARDAR AJUSTES',
+                  DemoLocalizations.of(context).saveSettings.toUpperCase(),
                   style: TextStyle(letterSpacing: 3.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -69,9 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onPressed: _changeUnits,
                         shape: OutlineInputBorder(borderSide: BorderSide(color: !isRetardUnits ? Colors.transparent : AppThemes.CYAN)),
                         child: Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.symmetric(vertical: 30.0),
                           child: Text(
-                            'METRIC\nSYSTEM',
+                            DemoLocalizations.of(context).metric.toUpperCase(),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: isRetardUnits ? Colors.white : AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold, fontSize: 15.0),
                           ),
@@ -82,9 +83,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onPressed: _changeUnits,
                         shape: OutlineInputBorder(borderSide: BorderSide(color: isRetardUnits ? Colors.transparent : AppThemes.CYAN)),
                         child: Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.symmetric(vertical: 30.0),
                           child: Text(
-                            'IMPERIAL\nSYSTEM',
+                            DemoLocalizations.of(context).imperial.toUpperCase(),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: !isRetardUnits ? Colors.white : AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold, fontSize: 15.0),
                           ),
@@ -105,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: Padding(
                           padding: const EdgeInsets.only(bottom: 7.0),
                           child: Text(
-                            'Altura',
+                            DemoLocalizations.of(context).height,
                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                         )),
@@ -155,7 +156,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: Padding(
                           padding: const EdgeInsets.only(bottom: 7.0),
                           child: Text(
-                            'Peso inicial',
+                            DemoLocalizations.of(context).initialWeight,
                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                         )),
@@ -204,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: Padding(
                           padding: const EdgeInsets.only(bottom: 7.0),
                           child: Text(
-                            'Peso objetivo',
+                            DemoLocalizations.of(context).objectiveWeight,
                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                         )),

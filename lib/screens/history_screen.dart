@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
-import 'package:simple_weight_tracking_app/model/weight.dart';
+import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
+import 'package:simple_weight_tracking_app/model/weights.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_register_card.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class HistoryScreen extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: Text(
-                'Historial',
+                DemoLocalizations.of(context).history,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
               ),
             ),

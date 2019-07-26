@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
+import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 
 double calculateIBM(double weight, double height) {
   height = height / 100;
@@ -10,23 +11,23 @@ double kgToLb(double weight) {
   return weight * 2.20462262185;
 }
 
-String getCategory(double ibm) {
+String getCategory(double ibm, context) {
   if (ibm < 16.0) {
-    return 'Bajo peso';
+    return DemoLocalizations.of(context).lowWeight;
   } else if (ibm < 17.0) {
-    return 'Bajo peso';
+    return DemoLocalizations.of(context).lowWeight;
   } else if (ibm < 18.5) {
-    return 'Bajo peso';
+    return DemoLocalizations.of(context).lowWeight;
   } else if (ibm < 24.9) {
-    return 'Peso normal';
+    return DemoLocalizations.of(context).normalWeight;
   } else if (ibm < 29.9) {
-    return 'Sobrepeso';
+    return DemoLocalizations.of(context).overWeight;
   } else if (ibm < 34.9) {
-    return 'Obesidad';
+    return DemoLocalizations.of(context).obesityWeight;
   } else if (ibm < 39.9) {
-    return 'Obesidad';
+    return DemoLocalizations.of(context).obesityWeight;
   } else {
-    return 'Obesidad';
+    return DemoLocalizations.of(context).obesityWeight;
   }
 }
 

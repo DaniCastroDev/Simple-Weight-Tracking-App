@@ -34,6 +34,15 @@ class DemoLocalizations {
       'lastMonth': 'Last month',
       'lastYear': 'Last year',
       'notEnoughData': 'Not enough data to create the chart',
+      'signIn': 'Log In',
+      'register': 'Sign In',
+      'signInWithGoogle': 'Sign in with Google',
+      'email': 'Email',
+      'password': 'Password',
+      'enterText': 'Please, enter some text',
+      'dontHaveAccount': 'Don\'nt have an account?',
+      'forgotPassword': 'Forgot your Password?',
+      'otherAccounts': 'Or log in with another account',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -58,6 +67,15 @@ class DemoLocalizations {
       'lastMonth': 'Último mes',
       'lastYear': 'Último año',
       'notEnoughData': 'No hay datos suficientes para mostrar la gráfica',
+      'signIn': 'Acceder',
+      'register': 'Regístrate',
+      'signInWithGoogle': 'Accede con Google',
+      'email': 'Email',
+      'password': 'Contraseña',
+      'enterText': 'Por favor, introduzca texto',
+      'dontHaveAccount': '¿No tienes una cuenta?',
+      'forgotPassword': '¿Olvidaste tu contraseña?',
+      'otherAccounts': 'O accede con otra cuenta',
     },
   };
 
@@ -147,6 +165,42 @@ class DemoLocalizations {
 
   String get notEnoughData {
     return _localizedValues[locale.languageCode]['notEnoughData'];
+  }
+
+  String get signIn {
+    return _localizedValues[locale.languageCode]['signIn'];
+  }
+
+  String get register {
+    return _localizedValues[locale.languageCode]['register'];
+  }
+
+  String get signInWithGoogle {
+    return _localizedValues[locale.languageCode]['signInWithGoogle'];
+  }
+
+  String get email {
+    return _localizedValues[locale.languageCode]['email'];
+  }
+
+  String get password {
+    return _localizedValues[locale.languageCode]['password'];
+  }
+
+  String get enterText {
+    return _localizedValues[locale.languageCode]['enterText'];
+  }
+
+  String get dontHaveAccount {
+    return _localizedValues[locale.languageCode]['dontHaveAccount'];
+  }
+
+  String get forgotPassword {
+    return _localizedValues[locale.languageCode]['forgotPassword'];
+  }
+
+  String get otherAccounts {
+    return _localizedValues[locale.languageCode]['otherAccounts'];
   }
 }
 

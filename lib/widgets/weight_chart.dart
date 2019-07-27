@@ -103,6 +103,10 @@ class _WeightChartState extends State<WeightChart> {
             ),
           )),
         ),
+        Container(
+          height: 15.0,
+          width: 1.0,
+        ),
         SizedBox(
           width: MediaQuery.of(context).size.width - 50,
           height: 200,

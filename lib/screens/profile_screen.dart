@@ -5,12 +5,12 @@ import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/utils/sharedprefs_constants.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 
-class SettingsScreen extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   SharedPreferences prefs;
   double initialWeight;
   double objectiveWeight;

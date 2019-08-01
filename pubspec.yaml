@@ -31,14 +31,15 @@ dependencies:
   firebase_auth: ^0.11.1+12
   google_sign_in: ^4.0.4
   firebase_storage: ^3.0.2
+  cloud_firestore: ^0.12.9
   json_annotation: ^2.4.0
   fl_chart: ^0.0.8
   rulers: ^1.0.3
   table_calendar: ^1.2.3
   percent_indicator: ^2.1.1
-  fluro: ^1.5.0
-  moor_flutter: ^1.4.0
-
+  flushbar: ^1.8.0
+  multi_page_form: ^1.0.4
+  font_awesome_flutter: ^8.5.0
 
 dev_dependencies:
   flutter_test:
@@ -46,7 +47,6 @@ dev_dependencies:
   json_serializable: ^3.0.0
   build_runner: ^1.6.1
   flutter_launcher_icons: ^0.7.2
-  moor_generator: ^1.4.0
 
 flutter_icons:
   android: true

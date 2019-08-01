@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
-import 'package:simple_weight_tracking_app/model/weights.dart';
+import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/screens/add_weight_screen.dart';
 import 'package:simple_weight_tracking_app/screens/history_screen.dart';
-import 'package:simple_weight_tracking_app/screens/register_screen.dart';
+import 'package:simple_weight_tracking_app/screens/signin_screen.dart';
 import 'package:simple_weight_tracking_app/screens/profile_screen.dart';
 import 'package:simple_weight_tracking_app/utils/bmi.dart';
 import 'package:simple_weight_tracking_app/utils/fade_transition.dart';
@@ -25,17 +25,25 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Montserrat',
         canvasColor: AppThemes.BLACK_BLUE,
+        textTheme: TextTheme(
+          body1: TextStyle(),
+          body2: TextStyle(),
+        ).apply(
+          bodyColor: Colors.orange,
+          displayColor: Colors.blue,
+        ),
       ),
       localizationsDelegates: [
         const CustomLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: [
         const Locale('en', ''),
         const Locale('es', ''),
       ],
-      home: RegisterScreen(),
+      home: SignInScreen(),
     );
   }
 }

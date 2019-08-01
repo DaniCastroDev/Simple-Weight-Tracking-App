@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
-import 'package:simple_weight_tracking_app/model/weights.dart';
+import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
+import 'package:simple_weight_tracking_app/widgets/loading_indicator.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SelectWeightScreen extends StatefulWidget {
   @override
@@ -13,18 +18,72 @@ class SelectWeightScreen extends StatefulWidget {
 }
 
 class _SelectWeightScreenState extends State<SelectWeightScreen> {
-  double weight = 60;
-  MyDatabase db;
-  double currentWeight;
+  FirebaseUser _user;
   List<Weight> weights = [];
   Map<DateTime, double> values;
-  DateTime date = onlyDate(DateTime.now());
   Map<DateTime, List> events;
   @override
   Widget build(BuildContext context) {
-    values = Map.fromIterable(weights, key: (w) => (w as Weight).date, value: (w) => (w as Weight).weight);
-    events = Map.fromIterable(weights, key: (item) => (item as Weight).date, value: (item) => [item]);
+    if (weights != null) weights.clear();
+    if (values != null) values.clear();
+    if (events != null) events.clear();
 
+    return _user == null
+        ? LoadingIndicator()
+        : StreamBuilder(
+            stream: Firestore.instance.collection('weights').document(_user.uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.active) {
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                  ),
+                  backgroundColor: AppThemes.BLACK_BLUE,
+                );
+              }
+              Map<String, dynamic> map = Map<String, dynamic>.from(snapshot.data.data);
+              List listSnapshot = List.from(map['weights']);
+              listSnapshot.forEach((_map) {
+                weights.add(Weight.fromJson(Map<String, dynamic>.from(_map)));
+              });
+              weights.sort((w1, w2) => w1.date.compareTo(w2.date));
+              values = Map.fromIterable(weights, key: (w) => (w as Weight).date, value: (w) => (w as Weight).weight);
+              events = Map.fromIterable(weights, key: (item) => (item as Weight).date, value: (item) => [item]);
+              return Content(values, events, weights, _user);
+            },
+          );
+  }
+
+  @override
+  void initState() {
+    _auth.currentUser().then((FirebaseUser user) {
+      setState(() {
+        _user = user;
+      });
+    });
+    super.initState();
+  }
+}
+
+class Content extends StatefulWidget {
+  final Map<DateTime, double> values;
+  final Map<DateTime, List> events;
+  final List<Weight> weights;
+  final FirebaseUser user;
+
+  const Content(this.values, this.events, this.weights, this.user);
+  @override
+  _ContentState createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
+  double weight = 60;
+  double currentWeight;
+  DateTime date = onlyDate(DateTime.now());
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppThemes.BLACK_BLUE,
       appBar: AppBar(
@@ -82,7 +141,7 @@ class _SelectWeightScreenState extends State<SelectWeightScreen> {
                     todayColor: AppThemes.GREEN_GREYER,
                     todayStyle: TextStyle(color: Colors.black),
                   ),
-                  events: events,
+                  events: widget.events,
                   headerStyle: HeaderStyle(
                     leftChevronIcon: Icon(
                       Icons.chevron_left,
@@ -148,8 +207,8 @@ class _SelectWeightScreenState extends State<SelectWeightScreen> {
       print('CHANGED DATE TO ${datetime.day} / ${datetime.month}');
       DateTime _onlyDate = onlyDate(datetime);
       date = _onlyDate;
-      if (values.containsKey(_onlyDate)) {
-        weight = values[_onlyDate];
+      if (widget.values.containsKey(_onlyDate)) {
+        weight = widget.values[_onlyDate];
       }
     });
   }
@@ -160,27 +219,19 @@ class _SelectWeightScreenState extends State<SelectWeightScreen> {
   /// El peso existe cuando existe un registro en la misma fecha.
 
   _addWeight(context) {
-    Weight _toAdd = Weight(date: date, weight: weight);
-    if (weights != null && weights.firstWhere((w) => w.date.isAtSameMomentAs(date), orElse: () => null) != null) {
+    Weight _toAdd = Weight(date, weight);
+    if (widget.weights != null && widget.weights.firstWhere((w) => w.date.isAtSameMomentAs(date), orElse: () => null) != null) {
       print('Actualizamos el valor ${_toAdd.date}, ${_toAdd.weight}');
-      db.updateWeight(_toAdd);
+      widget.weights.remove(widget.weights.firstWhere((w) => w.date.isAtSameMomentAs(date), orElse: () => null));
     } else {
       print('Añadimos el valor ${_toAdd.date}, ${_toAdd.weight}');
-      db.addWeight(_toAdd);
     }
-    Navigator.of(context).pop(true);
-  }
+    widget.weights.add(_toAdd);
 
-  @override
-  void initState() {
-    print('INIT');
-    db = MyDatabase();
-    db.allWeightEntries.then((value) {
-      setState(() {
-        weights = value;
-        weight = value.last.weight;
-      });
+    ListWeight listWeight = ListWeight(widget.weights);
+    print(listWeight.toJson());
+    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {
+      print('Hola');
     });
-    super.initState();
   }
 }

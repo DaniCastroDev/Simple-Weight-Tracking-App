@@ -1,4 +1,4 @@
-import 'package:simple_weight_tracking_app/model/weights.dart';
+import 'package:simple_weight_tracking_app/model/weight.dart';
 
 class ChartWeight {
   Weight weight;

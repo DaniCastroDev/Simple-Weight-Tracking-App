@@ -39,10 +39,18 @@ class DemoLocalizations {
       'signInWithGoogle': 'Sign in with Google',
       'email': 'Email',
       'password': 'Password',
+      'repeatPassword': 'Repeat the password',
+      'notSamePassword': 'The passwords are not the same',
       'enterText': 'Please, enter some text',
-      'dontHaveAccount': 'Don\'nt have an account?',
+      'dontHaveAccount': 'Don\'t have an account?',
       'forgotPassword': 'Forgot your Password?',
       'otherAccounts': 'Or log in with another account',
+      'termsAndConditions': 'I have read and accept the terms and conditions',
+      'sex': 'Sex',
+      'age': 'Age',
+      'male': 'Male',
+      'female': 'Female',
+      'other': 'Other',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -72,10 +80,18 @@ class DemoLocalizations {
       'signInWithGoogle': 'Accede con Google',
       'email': 'Email',
       'password': 'Contraseña',
+      'repeatPassword': 'Repite la constraseña',
+      'notSamePassword': 'Las contraseñas no coinciden',
       'enterText': 'Por favor, introduzca texto',
       'dontHaveAccount': '¿No tienes una cuenta?',
       'forgotPassword': '¿Olvidaste tu contraseña?',
       'otherAccounts': 'O accede con otra cuenta',
+      'termsAndConditions': 'He leído y acepto los términos y condiciones del servicio',
+      'sex': 'Sexo',
+      'age': 'Edad',
+      'male': 'Masculino',
+      'female': 'Femenino',
+      'other': 'Otro',
     },
   };
 
@@ -187,6 +203,14 @@ class DemoLocalizations {
     return _localizedValues[locale.languageCode]['password'];
   }
 
+  String get repeatPassword {
+    return _localizedValues[locale.languageCode]['repeatPassword'];
+  }
+
+  String get notSamePassword {
+    return _localizedValues[locale.languageCode]['notSamePassword'];
+  }
+
   String get enterText {
     return _localizedValues[locale.languageCode]['enterText'];
   }
@@ -201,6 +225,30 @@ class DemoLocalizations {
 
   String get otherAccounts {
     return _localizedValues[locale.languageCode]['otherAccounts'];
+  }
+
+  String get termsAndConditions {
+    return _localizedValues[locale.languageCode]['termsAndConditions'];
+  }
+
+  String get sex {
+    return _localizedValues[locale.languageCode]['sex'];
+  }
+
+  String get age {
+    return _localizedValues[locale.languageCode]['age'];
+  }
+
+  String get male {
+    return _localizedValues[locale.languageCode]['male'];
+  }
+
+  String get female {
+    return _localizedValues[locale.languageCode]['female'];
+  }
+
+  String get other {
+    return _localizedValues[locale.languageCode]['other'];
   }
 }
 

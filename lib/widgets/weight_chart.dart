@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
-import 'package:simple_weight_tracking_app/model/weights.dart';
+import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/utils/bmi.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
 

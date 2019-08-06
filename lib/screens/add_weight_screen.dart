@@ -224,7 +224,6 @@ class _ContentState extends State<Content> {
     widget.weights.add(_toAdd);
 
     ListWeight listWeight = ListWeight(widget.weights);
-    print(listWeight.toJson());
     Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {});
   }
 }

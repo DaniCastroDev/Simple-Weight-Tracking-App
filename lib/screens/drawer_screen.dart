@@ -8,7 +8,6 @@ import 'package:simple_weight_tracking_app/model/info_user.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/screens/general_screen.dart';
 import 'package:simple_weight_tracking_app/screens/goals_screen.dart';
-import 'package:simple_weight_tracking_app/screens/profile_screen.dart';
 import 'package:simple_weight_tracking_app/screens/select_height_screen.dart';
 import 'package:simple_weight_tracking_app/screens/signin_screen.dart';
 import 'package:simple_weight_tracking_app/utils/fade_transition.dart';
@@ -34,7 +33,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     List<String> _drawerOptions = [
       DemoLocalizations.of(context).mainScreen,
-      DemoLocalizations.of(context).profile,
       DemoLocalizations.of(context).objectives,
       DemoLocalizations.of(context).height,
       DemoLocalizations.of(context).notifications,
@@ -65,21 +63,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
         );
         break;
       case 1:
-        body = ProfileScreen(widget.user);
-        break;
-      case 2:
         body = GoalsScreen(
           infoUser: widget.infoUser,
           user: widget.user,
         );
         break;
-      case 3:
+      case 2:
         body = HeightScreen(
           infoUser: widget.infoUser,
           user: widget.user,
         );
         break;
-      case 4:
+      case 3:
         body = NotificationsScreen();
         break;
     }
@@ -101,7 +96,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     Text(
                       widget.user.displayName != "" ? widget.user.displayName : widget.user.email,
                       style: TextStyle(
-                        color: AppThemes.BLACK_BLUE,
+                        color: AppThemes.CYAN,
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -109,21 +104,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     ),
                   ],
                 ),
-                decoration: BoxDecoration(color: AppThemes.CYAN),
+              ),
+              Divider(
+                color: AppThemes.CYAN,
+                indent: 10.0,
+                endIndent: 10.0,
               ),
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: _drawerOptions.length,
                   itemBuilder: (context, index) {
                     List _actions = [
-                      () {
-                        if (_selectedIndex != index) {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        }
-                        Navigator.of(context).pop();
-                      },
                       () {
                         if (_selectedIndex != index) {
                           setState(() {

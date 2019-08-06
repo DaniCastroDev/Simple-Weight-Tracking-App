@@ -59,6 +59,7 @@ class DemoLocalizations {
       'objectives': 'Goals',
       'notifications': 'Notifications',
       'saveHeight': 'Save Height',
+      'updateGoals': 'Update goals',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -108,6 +109,7 @@ class DemoLocalizations {
       'objectives': 'Objetivos',
       'notifications': 'Notificaciones',
       'saveHeight': 'Guardar altura',
+      'updateGoals': 'Actualizar objetivos',
     },
   };
 
@@ -297,6 +299,10 @@ class DemoLocalizations {
 
   String get saveHeight {
     return _localizedValues[locale.languageCode]['saveHeight'];
+  }
+
+  String get updateGoals {
+    return _localizedValues[locale.languageCode]['updateGoals'];
   }
 }
 

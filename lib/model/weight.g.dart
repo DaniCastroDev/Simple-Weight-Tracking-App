@@ -16,4 +16,10 @@ ListWeight _$ListWeightFromJson(Map<dynamic, dynamic> json) {
   return ListWeight((json['weights'] as List)?.map((e) => e == null ? null : Weight.fromJson(e as Map<dynamic, dynamic>))?.toList());
 }
 
-Map<dynamic, dynamic> _$ListWeightToJson(ListWeight instance) => <String, dynamic>{'weights': instance.weights};
+Map<dynamic, dynamic> _$ListWeightToJson(ListWeight instance) {
+  List<Map> weights = [];
+  instance.weights.forEach((w) {
+    weights.add(w.toJson());
+  });
+  return <String, dynamic>{'weights': weights};
+}

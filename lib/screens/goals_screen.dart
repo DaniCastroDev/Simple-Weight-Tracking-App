@@ -33,7 +33,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
                 child: Text(
-                  DemoLocalizations.of(context).saveHeight.toUpperCase(),
+                  DemoLocalizations.of(context).updateGoals.toUpperCase(),
                   style: TextStyle(letterSpacing: 3.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -93,168 +93,230 @@ class _GoalsScreenState extends State<GoalsScreen> {
           ),
         ),
         bottomNavigationBar: bottomButton(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                          child: Padding(
-                        padding: const EdgeInsets.only(bottom: 7.0),
-                        child: Text(
-                          DemoLocalizations.of(context).initialWeight,
-                          style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                        ),
-                      )),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      DemoLocalizations.of(context).initialWeight,
+                      style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Card(
+                    color: AppThemes.GREY_GREENER,
+                    margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            '${widget.infoUser.initialWeight}' ?? '',
-                            style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 7.0),
-                            child: Text(
-                              widget.infoUser.initialWeight != null ? 'kg' : '',
-                              style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextFormField(
-                          controller: TextEditingController(text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight)),
-                          style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                            hintText: DemoLocalizations.of(context).email,
-                            filled: true,
-                            fillColor: AppThemes.CYAN,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          enabled: false,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.date_range,
-                          color: AppThemes.CYAN,
-                          size: 80.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    setState(() {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext builder) {
-                            return Container(
-                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                child: CupertinoDatePicker(
-                                  initialDateTime: widget.infoUser.dateInitialWeight,
-                                  onDateTimeChanged: (DateTime newdate) {
+                          Row(
+                            children: <Widget>[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.infoUser.initialWeight}' ?? '',
+                                    style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 7.0),
+                                    child: Text(
+                                      widget.infoUser.initialWeight != null ? 'kg' : '',
+                                      style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      controller: TextEditingController(
+                                          text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight)),
+                                      style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                      decoration: InputDecoration(
+                                        hintText: DemoLocalizations.of(context).email,
+                                        filled: true,
+                                        fillColor: AppThemes.CYAN,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      enabled: false,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: () {
                                     setState(() {
-                                      widget.infoUser.dateInitialWeight = newdate;
-                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight);
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext builder) {
+                                            return Container(
+                                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                child: CupertinoDatePicker(
+                                                  initialDateTime: widget.infoUser.dateInitialWeight,
+                                                  onDateTimeChanged: (DateTime newdate) {
+                                                    setState(() {
+                                                      widget.infoUser.dateInitialWeight = newdate;
+                                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight);
+                                                    });
+                                                  },
+                                                  maximumDate: new DateTime.now(),
+                                                  minimumYear: 1900,
+                                                  maximumYear: DateTime.now().year,
+                                                  mode: CupertinoDatePickerMode.date,
+                                                ));
+                                          });
                                     });
                                   },
-                                  maximumDate: new DateTime.now(),
-                                  minimumYear: 1900,
-                                  maximumYear: DateTime.now().year,
-                                  mode: CupertinoDatePickerMode.date,
-                                ));
-                          });
-                    });
-                  },
-                ),
-                Container(
-                  height: 100.0,
-                  child: WeightSlider(
-                    minValue: 1,
-                    maxValue: 500,
-                    width: MediaQuery.of(context).size.width,
-                    value: widget.infoUser.initialWeight,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.infoUser.initialWeight = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                          child: Padding(
-                        padding: const EdgeInsets.only(bottom: 7.0),
-                        child: Text(
-                          DemoLocalizations.of(context).objectiveWeight,
-                          style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                        ),
-                      )),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            '${widget.infoUser.objectiveWeight}' ?? '',
-                            style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 7.0),
-                            child: Text(
-                              widget.infoUser.objectiveWeight != null ? 'kg' : '',
-                              style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                          Container(
+                            height: 100.0,
+                            child: WeightSlider(
+                              minValue: 1,
+                              maxValue: 500,
+                              width: MediaQuery.of(context).size.width,
+                              value: widget.infoUser.initialWeight,
+                              onChanged: (value) {
+                                setState(() {
+                                  widget.infoUser.initialWeight = value;
+                                });
+                              },
                             ),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                Container(
-                  height: 100.0,
-                  child: WeightSlider(
-                    minValue: 1,
-                    maxValue: 500,
-                    width: MediaQuery.of(context).size.width,
-                    value: widget.infoUser.objectiveWeight,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.infoUser.objectiveWeight = value;
-                      });
-                    },
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      DemoLocalizations.of(context).objectiveWeight,
+                      style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Card(
+                    color: AppThemes.GREY_GREENER,
+                    margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.infoUser.objectiveWeight}' ?? '',
+                                    style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 7.0),
+                                    child: Text(
+                                      widget.infoUser.objectiveWeight != null ? 'kg' : '',
+                                      style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      controller: TextEditingController(
+                                          text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight)),
+                                      style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                      decoration: InputDecoration(
+                                        hintText: DemoLocalizations.of(context).email,
+                                        filled: true,
+                                        fillColor: AppThemes.CYAN,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      enabled: false,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext builder) {
+                                            return Container(
+                                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                child: CupertinoDatePicker(
+                                                  initialDateTime: widget.infoUser.dateObjectiveWeight,
+                                                  onDateTimeChanged: (DateTime newdate) {
+                                                    setState(() {
+                                                      widget.infoUser.dateObjectiveWeight = newdate;
+                                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight);
+                                                    });
+                                                  },
+                                                  maximumDate: new DateTime.now(),
+                                                  minimumYear: 1900,
+                                                  mode: CupertinoDatePickerMode.date,
+                                                ));
+                                          });
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            height: 100.0,
+                            child: WeightSlider(
+                              minValue: 1,
+                              maxValue: 500,
+                              width: MediaQuery.of(context).size.width,
+                              value: widget.infoUser.objectiveWeight,
+                              onChanged: (value) {
+                                setState(() {
+                                  widget.infoUser.objectiveWeight = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ));
   }
 }

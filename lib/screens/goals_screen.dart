@@ -1,0 +1,260 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:simple_weight_tracking_app/appthemes.dart';
+import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
+import 'package:simple_weight_tracking_app/model/info_user.dart';
+import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
+
+class GoalsScreen extends StatefulWidget {
+  final InfoUser infoUser;
+  final FirebaseUser user;
+  GoalsScreen({this.infoUser, this.user});
+
+  @override
+  _GoalsScreenState createState() => _GoalsScreenState();
+}
+
+class _GoalsScreenState extends State<GoalsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    Widget bottomButton() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              color: AppThemes.CYAN,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
+                child: Text(
+                  DemoLocalizations.of(context).saveHeight.toUpperCase(),
+                  style: TextStyle(letterSpacing: 3.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                ),
+              ),
+              onPressed: () {
+                DocumentReference userInfoRef = Firestore.instance.collection("userInfo").document(widget.user.uid);
+                Firestore.instance.runTransaction((transaction) async {
+                  await transaction.set(userInfoRef, widget.infoUser.toJson());
+                }).catchError((e) {
+                  Flushbar(
+                    margin: EdgeInsets.all(8),
+                    borderRadius: 8,
+                    borderColor: Colors.black,
+                    backgroundColor: Colors.red,
+                    messageText: Text(
+                      'An error has ocurred. Please, try again later',
+                      style: TextStyle(color: AppThemes.BLACK_BLUE),
+                    ),
+                    duration: Duration(seconds: 3),
+                  ).show(context);
+                }).whenComplete(() {
+                  Flushbar(
+                    margin: EdgeInsets.all(8),
+                    borderRadius: 8,
+                    borderColor: Colors.black,
+                    backgroundColor: AppThemes.CYAN,
+                    messageText: Text(
+                      'NICE',
+                      style: TextStyle(color: AppThemes.BLACK_BLUE),
+                    ),
+                    duration: Duration(seconds: 3),
+                  ).show(context);
+                });
+              },
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+            child: Icon(
+              Icons.menu,
+              size: 35.0,
+              color: AppThemes.GREY,
+            ),
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          title: Text(
+            DemoLocalizations.of(context).objectives,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
+          ),
+        ),
+        bottomNavigationBar: bottomButton(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.only(bottom: 7.0),
+                        child: Text(
+                          DemoLocalizations.of(context).initialWeight,
+                          style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '${widget.infoUser.initialWeight}' ?? '',
+                            style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 7.0),
+                            child: Text(
+                              widget.infoUser.initialWeight != null ? 'kg' : '',
+                              style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextFormField(
+                          controller: TextEditingController(text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight)),
+                          style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                          decoration: InputDecoration(
+                            hintText: DemoLocalizations.of(context).email,
+                            filled: true,
+                            fillColor: AppThemes.CYAN,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          enabled: false,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.date_range,
+                          color: AppThemes.CYAN,
+                          size: 80.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    setState(() {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext builder) {
+                            return Container(
+                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                child: CupertinoDatePicker(
+                                  initialDateTime: widget.infoUser.dateInitialWeight,
+                                  onDateTimeChanged: (DateTime newdate) {
+                                    setState(() {
+                                      widget.infoUser.dateInitialWeight = newdate;
+                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight);
+                                    });
+                                  },
+                                  maximumDate: new DateTime.now(),
+                                  minimumYear: 1900,
+                                  maximumYear: DateTime.now().year,
+                                  mode: CupertinoDatePickerMode.date,
+                                ));
+                          });
+                    });
+                  },
+                ),
+                Container(
+                  height: 100.0,
+                  child: WeightSlider(
+                    minValue: 1,
+                    maxValue: 500,
+                    width: MediaQuery.of(context).size.width,
+                    value: widget.infoUser.initialWeight,
+                    onChanged: (value) {
+                      setState(() {
+                        widget.infoUser.initialWeight = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.only(bottom: 7.0),
+                        child: Text(
+                          DemoLocalizations.of(context).objectiveWeight,
+                          style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '${widget.infoUser.objectiveWeight}' ?? '',
+                            style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 7.0),
+                            child: Text(
+                              widget.infoUser.objectiveWeight != null ? 'kg' : '',
+                              style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 100.0,
+                  child: WeightSlider(
+                    minValue: 1,
+                    maxValue: 500,
+                    width: MediaQuery.of(context).size.width,
+                    value: widget.infoUser.objectiveWeight,
+                    onChanged: (value) {
+                      setState(() {
+                        widget.infoUser.objectiveWeight = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+}

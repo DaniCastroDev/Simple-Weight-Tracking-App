@@ -8,8 +8,8 @@ class Weight {
 
   Weight(this.date, this.weight);
 
-  factory Weight.fromJson(Map<String, dynamic> json) => _$WeightFromJson(json);
-  Map<String, dynamic> toJson() => _$WeightToJson(this);
+  factory Weight.fromJson(Map<dynamic, dynamic> json) => _$WeightFromJson(json);
+  Map<dynamic, dynamic> toJson() => _$WeightToJson(this);
 }
 
 @JsonSerializable()
@@ -18,6 +18,6 @@ class ListWeight {
 
   ListWeight(this.weights);
 
-  factory ListWeight.fromJson(Map<String, dynamic> json) => _$ListWeightFromJson(json);
-  Map<String, dynamic> toJson() => _$ListWeightToJson(this);
+  factory ListWeight.fromJson(Map<dynamic, dynamic> json) => _$ListWeightFromJson(json);
+  Map<dynamic, dynamic> toJson() => _$ListWeightToJson(this);
 }

@@ -40,6 +40,7 @@ dependencies:
   flushbar: ^1.8.0
   multi_page_form: ^1.0.4
   font_awesome_flutter: ^8.5.0
+  flutter_local_notifications: ^0.8.1
 
 dev_dependencies:
   flutter_test:

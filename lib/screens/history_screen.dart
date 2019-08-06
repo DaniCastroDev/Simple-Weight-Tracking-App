@@ -11,7 +11,10 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Weight> reversedWeights = weights.reversed.toList();
+    List<WeightRegisterCard> cards = [];
+    for (int i = weights.length - 1; i >= 0; i--) {
+      cards.add(WeightRegisterCard(weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
+    }
     return Scaffold(
       backgroundColor: AppThemes.BLACK_BLUE,
       appBar: AppBar(
@@ -39,13 +42,9 @@ class HistoryScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Hero(
           tag: 'listaHistorial',
-          child: ListView.builder(
-              itemCount: weights.length,
-              itemBuilder: (context, index) {
-                return WeightRegisterCard(
-                  weight: reversedWeights[index],
-                );
-              }),
+          child: ListView(
+            children: cards,
+          ),
         ),
       ),
     );

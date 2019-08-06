@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: <Widget>[
             Hero(
               tag: 'profilePhoto',
-              child: ProfileButton(
+              child: ProfilePhoto(
                 imageUrl: widget.user.photoUrl,
                 size: 150.0,
               ),

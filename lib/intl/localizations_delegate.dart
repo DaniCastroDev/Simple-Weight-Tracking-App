@@ -23,7 +23,7 @@ class DemoLocalizations {
       'imperial': 'Imperial\nSystem',
       'height': 'Height',
       'initialWeight': 'Initial weight',
-      'objectiveWeight': 'Objective weight',
+      'objectiveWeight': 'Goal weight',
       'saveSettings': 'Save Settings',
       'settings': 'Settings',
       'lowWeight': 'Low weight',
@@ -48,9 +48,17 @@ class DemoLocalizations {
       'termsAndConditions': 'I have read and accept the terms and conditions',
       'sex': 'Sex',
       'age': 'Age',
+      'birthdate': 'Birthdate',
       'male': 'Male',
       'female': 'Female',
       'other': 'Other',
+      'mainScreen': 'General Info',
+      'profile': 'Profile',
+      'closeSession': 'Log out',
+      'closeApp': 'Close the app',
+      'objectives': 'Goals',
+      'notifications': 'Notifications',
+      'saveHeight': 'Save Height',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -89,9 +97,17 @@ class DemoLocalizations {
       'termsAndConditions': 'He leído y acepto los términos y condiciones del servicio',
       'sex': 'Sexo',
       'age': 'Edad',
+      'birthdate': 'Fecha de nacimiento',
       'male': 'Masculino',
       'female': 'Femenino',
       'other': 'Otro',
+      'mainScreen': 'Información General',
+      'profile': 'Perfil',
+      'closeSession': 'Cerrar sesión',
+      'closeApp': 'Salir de la aplicación',
+      'objectives': 'Objetivos',
+      'notifications': 'Notificaciones',
+      'saveHeight': 'Guardar altura',
     },
   };
 
@@ -239,6 +255,10 @@ class DemoLocalizations {
     return _localizedValues[locale.languageCode]['age'];
   }
 
+  String get birthdate {
+    return _localizedValues[locale.languageCode]['birthdate'];
+  }
+
   String get male {
     return _localizedValues[locale.languageCode]['male'];
   }
@@ -249,6 +269,34 @@ class DemoLocalizations {
 
   String get other {
     return _localizedValues[locale.languageCode]['other'];
+  }
+
+  String get profile {
+    return _localizedValues[locale.languageCode]['profile'];
+  }
+
+  String get mainScreen {
+    return _localizedValues[locale.languageCode]['mainScreen'];
+  }
+
+  String get closeApp {
+    return _localizedValues[locale.languageCode]['closeApp'];
+  }
+
+  String get closeSession {
+    return _localizedValues[locale.languageCode]['closeSession'];
+  }
+
+  String get objectives {
+    return _localizedValues[locale.languageCode]['objectives'];
+  }
+
+  String get notifications {
+    return _localizedValues[locale.languageCode]['notifications'];
+  }
+
+  String get saveHeight {
+    return _localizedValues[locale.languageCode]['saveHeight'];
   }
 }
 

@@ -120,7 +120,7 @@ class _WeightChartState extends State<WeightChart> {
                 ),
                 lineBarsData: [
                   LineChartBarData(
-                    curveSmoothness: 0.0,
+                    curveSmoothness: 0.2,
                     isStrokeCapRound: true,
                     spots: spots,
                     isCurved: true,

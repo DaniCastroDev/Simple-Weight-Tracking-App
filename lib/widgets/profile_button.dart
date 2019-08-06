@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ProfileButton extends StatefulWidget {
+class ProfilePhoto extends StatefulWidget {
   final String imageUrl;
   final double size;
 
-  ProfileButton({this.imageUrl, this.size = 50.0});
+  ProfilePhoto({this.imageUrl, this.size = 50.0});
 
   @override
-  _ProfileButtonState createState() => _ProfileButtonState();
+  _ProfilePhotoState createState() => _ProfilePhotoState();
 }
 
-class _ProfileButtonState extends State<ProfileButton> {
+class _ProfilePhotoState extends State<ProfilePhoto> {
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -169,62 +169,70 @@ class SignInScreenState extends State<SignInScreen> {
                         ],
                       ),
                     ),
-                    Divider(
-                      color: AppThemes.CYAN,
-                      indent: 20.0,
-                      endIndent: 20.0,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                            height: 1.0,
+                            color: AppThemes.CYAN,
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              DemoLocalizations.of(context).otherAccounts,
+                              style: TextStyle(color: AppThemes.CYAN),
+                            ),
+                          ),
+                          Expanded(
+                              child: Container(
+                            height: 1.0,
+                            color: AppThemes.CYAN,
+                          )),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                            DemoLocalizations.of(context).otherAccounts,
-                            style: TextStyle(color: AppThemes.CYAN),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: _signInWithGoogle,
-                                child: Container(
-                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                      'assets/images/google-logo.png',
-                                      height: 40.0,
-                                    ),
-                                  ),
-                                ),
-                                shape: CircleBorder(
-                                  side: BorderSide(width: 2.0, color: AppThemes.CYAN),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: _signInWithGoogle,
+                            child: Container(
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/images/google-logo.png',
+                                  height: 40.0,
                                 ),
                               ),
-                              MaterialButton(
-                                onPressed: _signInWithGoogle,
-                                child: Container(
-                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                      'assets/images/facebook-logo.png',
-                                      height: 40.0,
-                                    ),
-                                  ),
-                                ),
-                                shape: CircleBorder(
-                                  side: BorderSide(width: 2.0, color: AppThemes.CYAN),
+                            ),
+                            shape: CircleBorder(
+                              side: BorderSide(width: 2.0, color: AppThemes.CYAN),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: _signInWithGoogle,
+                            child: Container(
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/images/facebook-logo.png',
+                                  height: 40.0,
                                 ),
                               ),
-                            ],
+                            ),
+                            shape: CircleBorder(
+                              side: BorderSide(width: 2.0, color: AppThemes.CYAN),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -302,6 +310,9 @@ class SignInScreenState extends State<SignInScreen> {
         case 'ERROR_INVALID_EMAIL':
           message = 'El correo electrónico no es válido';
           break;
+        case 'error':
+          message = 'El correo electrónico no es válido';
+          break;
         default:
           message = error.code;
           break;
@@ -310,7 +321,10 @@ class SignInScreenState extends State<SignInScreen> {
         margin: EdgeInsets.all(8),
         borderRadius: 8,
         backgroundColor: Colors.red,
-        messageText: Text(message),
+        messageText: Text(
+          message,
+          style: TextStyle(color: AppThemes.BLACK_BLUE, fontSize: 16.0),
+        ),
         duration: Duration(seconds: 3),
       ).show(context);
     }).whenComplete(() {

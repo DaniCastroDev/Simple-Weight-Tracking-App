@@ -24,15 +24,14 @@ class _SelectWeightScreenState extends State<SelectWeightScreen> {
   Map<DateTime, List> events;
   @override
   Widget build(BuildContext context) {
-    if (weights != null) weights.clear();
-    if (values != null) values.clear();
-    if (events != null) events.clear();
-
     return _user == null
         ? LoadingIndicator()
         : StreamBuilder(
             stream: Firestore.instance.collection('weights').document(_user.uid).snapshots(),
             builder: (context, snapshot) {
+              if (weights != null) weights.clear();
+              if (values != null) values.clear();
+              if (events != null) events.clear();
               if (snapshot.connectionState != ConnectionState.active) {
                 return Scaffold(
                   appBar: AppBar(
@@ -220,18 +219,12 @@ class _ContentState extends State<Content> {
 
   _addWeight(context) {
     Weight _toAdd = Weight(date, weight);
-    if (widget.weights != null && widget.weights.firstWhere((w) => w.date.isAtSameMomentAs(date), orElse: () => null) != null) {
-      print('Actualizamos el valor ${_toAdd.date}, ${_toAdd.weight}');
-      widget.weights.remove(widget.weights.firstWhere((w) => w.date.isAtSameMomentAs(date), orElse: () => null));
-    } else {
-      print('Añadimos el valor ${_toAdd.date}, ${_toAdd.weight}');
-    }
+    widget.weights.removeWhere((w) => w.date.isAtSameMomentAs(date));
+    print('Añadimos el valor ${_toAdd.date}, ${_toAdd.weight}');
     widget.weights.add(_toAdd);
 
     ListWeight listWeight = ListWeight(widget.weights);
     print(listWeight.toJson());
-    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {
-      print('Hola');
-    });
+    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {});
   }
 }

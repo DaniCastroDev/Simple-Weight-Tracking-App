@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
@@ -15,8 +17,9 @@ import 'package:simple_weight_tracking_app/widgets/weight_register_card.dart';
 class GeneralScreen extends StatelessWidget {
   final InfoUser infoUser;
   final List<Weight> weights;
+  final FirebaseUser user;
 
-  GeneralScreen({this.infoUser, this.weights});
+  GeneralScreen({this.infoUser, this.weights, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -137,38 +140,30 @@ class GeneralScreen extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Column(
                   children: <Widget>[
-                    Text(
-                      _getCorrectWeight(infoUser.initialWeight),
-                      style: TextStyle(color: AppThemes.GREY, fontSize: 30.0, fontWeight: FontWeight.bold),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          _getCorrectWeight(infoUser.initialWeight),
+                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Text(
+                            _getUnitOfMeasure(),
+                            style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        _getUnitOfMeasure(),
-                        style: TextStyle(color: AppThemes.GREY, fontSize: 14.0, fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight),
+                      style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    _getCorrectWeight(currentWeight.weight),
-                    style: TextStyle(color: Colors.white, fontSize: 50.0, fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 9.0),
-                    child: Text(
-                      _getUnitOfMeasure(),
-                      style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
@@ -176,15 +171,42 @@ class GeneralScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      _getCorrectWeight(infoUser.objectiveWeight),
-                      style: TextStyle(color: AppThemes.GREY, fontSize: 30.0, fontWeight: FontWeight.bold),
+                      _getCorrectWeight(currentWeight.weight),
+                      style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 700 ? 50.0 : 40.0, fontWeight: FontWeight.bold),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
+                      padding: const EdgeInsets.only(bottom: 9.0),
                       child: Text(
                         _getUnitOfMeasure(),
-                        style: TextStyle(color: AppThemes.GREY, fontSize: 14.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 700 ? 20.0 : 14.0, fontWeight: FontWeight.bold),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          _getCorrectWeight(infoUser.objectiveWeight),
+                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Text(
+                            _getUnitOfMeasure(),
+                            style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight),
+                      style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -208,7 +230,17 @@ class GeneralScreen extends StatelessWidget {
     }
 
     return Builder(
-      builder: (buildercontext) {
+      builder: (builderContext) {
+        List<Weight> predictedWeights = [];
+
+        if (infoUser.activeObjectives) {
+          Duration days = infoUser.dateObjectiveWeight.difference(infoUser.dateInitialWeight.subtract(Duration(days: 1)));
+          double weightDifference = infoUser.initialWeight - infoUser.objectiveWeight;
+          double weightPerDay = weightDifference / days.inDays;
+          for (int i = 0; i < days.inDays; i++) {
+            predictedWeights.add(Weight(infoUser.dateInitialWeight.add(Duration(days: i)), infoUser.initialWeight - (weightPerDay * i)));
+          }
+        }
         return SafeArea(
           child: Scaffold(
             bottomSheet: Row(
@@ -227,7 +259,10 @@ class GeneralScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(FadeTransitionRoute(widget: SelectWeightScreen()));
+                      Navigator.of(context).push(FadeTransitionRoute(
+                          widget: SelectWeightScreen(
+                        user: user,
+                      )));
                     },
                   ),
                 ),
@@ -249,11 +284,15 @@ class GeneralScreen extends StatelessWidget {
                             color: AppThemes.GREY,
                           ),
                           onTap: () {
-                            Scaffold.of(buildercontext).openDrawer();
+                            Scaffold.of(builderContext).openDrawer();
                           },
                         ),
-                        weights != null && weights.length > 1
-                            ? WeightChart(weights, isRetardUnits)
+                        weights != null && weights.length > 0
+                            ? WeightChart(
+                                objectiveWeights: predictedWeights,
+                                weights: weights,
+                                isRetardUnits: isRetardUnits,
+                              )
                             : Container(
                                 height: 200.0,
                                 child: Center(
@@ -275,10 +314,16 @@ class GeneralScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          height: 25.0,
-                        ),
-                        _goalProgress(),
+                        infoUser.activeObjectives
+                            ? Column(
+                                children: <Widget>[
+                                  Container(
+                                    height: 25.0,
+                                  ),
+                                  _goalProgress(),
+                                ],
+                              )
+                            : Container(),
                         Container(
                           height: 25.0,
                         ),
@@ -287,6 +332,9 @@ class GeneralScreen extends StatelessWidget {
                           height: 25.0,
                         ),
                         _historyCards(),
+                        Container(
+                          height: 75.0,
+                        ),
                       ],
                     ),
                   ),

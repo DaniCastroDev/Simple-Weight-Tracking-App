@@ -28,6 +28,7 @@ class _StepperScreenState extends State<StepperScreen> {
     height: 160.0,
     initialWeight: 70.0,
     objectiveWeight: 70.0,
+    activeObjectives: true,
   );
   TextEditingController _controller = TextEditingController();
 
@@ -39,15 +40,15 @@ class _StepperScreenState extends State<StepperScreen> {
       body: MultiPageForm(
         totalPage: 3,
         nextButtonStyle: Text(
-          'Siguiente',
+          DemoLocalizations.of(context).next,
           style: TextStyle(fontSize: 20.0, color: AppThemes.CYAN, fontWeight: FontWeight.bold),
         ),
         previousButtonStyle: Text(
-          'Anterior',
+          DemoLocalizations.of(context).previous,
           style: TextStyle(fontSize: 20.0, color: AppThemes.CYAN, fontWeight: FontWeight.bold),
         ),
         submitButtonStyle: Text(
-          'Guardar',
+          DemoLocalizations.of(context).save,
           style: TextStyle(fontSize: 20.0, color: AppThemes.CYAN, fontWeight: FontWeight.bold),
         ),
         pageList: <Widget>[sexAndBirth(), height(), weights()],
@@ -85,174 +86,177 @@ class _StepperScreenState extends State<StepperScreen> {
         body: SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    DemoLocalizations.of(context).birthdate,
-                    style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controller,
-                              style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                hintText: DemoLocalizations.of(context).email,
-                                filled: true,
-                                fillColor: AppThemes.CYAN,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              enabled: false,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.date_range,
-                              color: AppThemes.CYAN,
-                              size: 50.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        setState(() {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext builder) {
-                                return Container(
-                                    height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                    child: CupertinoDatePicker(
-                                      initialDateTime: infoUser.dateOfBirth,
-                                      onDateTimeChanged: (DateTime newdate) {
-                                        setState(() {
-                                          infoUser.dateOfBirth = newdate;
-                                          _controller.text = DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateOfBirth);
-                                        });
-                                      },
-                                      maximumDate: new DateTime.now(),
-                                      minimumYear: 1900,
-                                      maximumYear: DateTime.now().year,
-                                      mode: CupertinoDatePickerMode.date,
-                                    ));
-                              });
-                        });
-                      },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      DemoLocalizations.of(context).birthdate,
+                      style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        DemoLocalizations.of(context).sex,
-                        style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        getGender(infoUser.gender),
-                        style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controller,
+                                style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                decoration: InputDecoration(
+                                  hintText: DemoLocalizations.of(context).email,
+                                  filled: true,
+                                  fillColor: AppThemes.CYAN,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                enabled: false,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.date_range,
+                                color: AppThemes.CYAN,
+                                size: 70.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          setState(() {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext builder) {
+                                  return Container(
+                                      height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                      child: CupertinoDatePicker(
+                                        initialDateTime: infoUser.dateOfBirth,
+                                        onDateTimeChanged: (DateTime newdate) {
+                                          setState(() {
+                                            infoUser.dateOfBirth = newdate;
+                                            _controller.text = DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateOfBirth);
+                                          });
+                                        },
+                                        maximumDate: new DateTime.now(),
+                                        minimumYear: 1900,
+                                        maximumYear: DateTime.now().year,
+                                        mode: CupertinoDatePickerMode.date,
+                                      ));
+                                });
+                          });
+                        },
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GridView(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 20.0),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        InkWell(
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                                color: infoUser.gender == 'F' ? AppThemes.CYAN : Colors.transparent,
-                                border: Border.all(color: infoUser.gender == 'F' ? AppThemes.CYAN : Colors.white),
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Icon(
-                              FontAwesomeIcons.venus,
-                              size: 150.0,
-                              color: Colors.pink,
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              infoUser.gender = 'F';
-                            });
-                          },
+                        Text(
+                          DemoLocalizations.of(context).sex,
+                          style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        InkWell(
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                                color: infoUser.gender == 'M' ? AppThemes.CYAN : Colors.transparent,
-                                border: Border.all(color: infoUser.gender == 'M' ? AppThemes.CYAN : Colors.white),
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Icon(
-                              FontAwesomeIcons.mars,
-                              size: 150.0,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              infoUser.gender = 'M';
-                            });
-                          },
-                        ),
-                        InkWell(
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                                color: infoUser.gender == 'O' ? AppThemes.CYAN : Colors.transparent,
-                                border: Border.all(color: infoUser.gender == 'O' ? AppThemes.CYAN : Colors.white),
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Icon(
-                              FontAwesomeIcons.marsStrokeH,
-                              size: 150.0,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              infoUser.gender = 'O';
-                            });
-                          },
+                        Text(
+                          getGender(infoUser.gender),
+                          style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      GridView(
+                        primary: false,
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2, crossAxisSpacing: 25.0, mainAxisSpacing: 25.0),
+                        children: <Widget>[
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                  color: infoUser.gender == 'F' ? AppThemes.CYAN : Colors.transparent,
+                                  border: Border.all(color: infoUser.gender == 'F' ? AppThemes.CYAN : Colors.white),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Icon(
+                                FontAwesomeIcons.venus,
+                                size: 100.0,
+                                color: Colors.pink,
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                infoUser.gender = 'F';
+                              });
+                            },
+                          ),
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                  color: infoUser.gender == 'M' ? AppThemes.CYAN : Colors.transparent,
+                                  border: Border.all(color: infoUser.gender == 'M' ? AppThemes.CYAN : Colors.white),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Icon(
+                                FontAwesomeIcons.mars,
+                                size: 100.0,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                infoUser.gender = 'M';
+                              });
+                            },
+                          ),
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                  color: infoUser.gender == 'O' ? AppThemes.CYAN : Colors.transparent,
+                                  border: Border.all(color: infoUser.gender == 'O' ? AppThemes.CYAN : Colors.white),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Icon(
+                                FontAwesomeIcons.marsStrokeH,
+                                size: 100.0,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                infoUser.gender = 'O';
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ));
@@ -311,6 +315,7 @@ class _StepperScreenState extends State<StepperScreen> {
                   width: 80.0,
                   height: MediaQuery.of(context).size.height / 1.4,
                   child: WeightSlider(
+                    controller: ScrollController(),
                     minValue: 1,
                     maxValue: 300,
                     isHeight: true,
@@ -331,228 +336,268 @@ class _StepperScreenState extends State<StepperScreen> {
 
   Widget weights() {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          title: Text(
+            DemoLocalizations.of(context).objectives,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
+          ),
+          actions: <Widget>[
+            Checkbox(
+              value: infoUser.activeObjectives,
+              onChanged: (value) {
+                setState(() {
+                  infoUser.activeObjectives = value;
+                });
+              },
+              checkColor: AppThemes.BLACK_BLUE,
+              activeColor: AppThemes.CYAN,
+            ),
+          ],
+        ),
         body: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Stack(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  DemoLocalizations.of(context).initialWeight,
-                  style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Card(
-                color: AppThemes.GREY_GREENER,
-                margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                '${infoUser.initialWeight}' ?? '',
-                                style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 7.0),
-                                child: Text(
-                                  infoUser.initialWeight != null ? 'kg' : '',
-                                  style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            DemoLocalizations.of(context).initialWeight,
+                            style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                           ),
-                          Expanded(
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextFormField(
-                                  controller: TextEditingController(text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight)),
-                                  style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    hintText: DemoLocalizations.of(context).email,
-                                    filled: true,
-                                    fillColor: AppThemes.CYAN,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        Card(
+                          color: AppThemes.GREY_GREENER,
+                          margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          '${infoUser.initialWeight}' ?? '',
+                                          style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 7.0),
+                                          child: Text(
+                                            infoUser.initialWeight != null ? 'kg' : '',
+                                            style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  enabled: false,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (BuildContext builder) {
-                                        return Container(
-                                            height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                            child: CupertinoDatePicker(
-                                              initialDateTime: infoUser.dateInitialWeight,
-                                              onDateTimeChanged: (DateTime newdate) {
-                                                setState(() {
-                                                  infoUser.dateInitialWeight = newdate;
-                                                  DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight);
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller:
+                                                TextEditingController(text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight)),
+                                            style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                            decoration: InputDecoration(
+                                              hintText: DemoLocalizations.of(context).email,
+                                              filled: true,
+                                              fillColor: AppThemes.CYAN,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (BuildContext builder) {
+                                                  return Container(
+                                                      height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                      child: CupertinoDatePicker(
+                                                        initialDateTime: infoUser.dateInitialWeight,
+                                                        onDateTimeChanged: (DateTime newdate) {
+                                                          setState(() {
+                                                            infoUser.dateInitialWeight = newdate;
+                                                            DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight);
+                                                          });
+                                                        },
+                                                        maximumDate: new DateTime.now(),
+                                                        minimumYear: 1900,
+                                                        maximumYear: DateTime.now().year,
+                                                        mode: CupertinoDatePickerMode.date,
+                                                      ));
                                                 });
-                                              },
-                                              maximumDate: new DateTime.now(),
-                                              minimumYear: 1900,
-                                              maximumYear: DateTime.now().year,
-                                              mode: CupertinoDatePickerMode.date,
-                                            ));
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 100.0,
+                                  child: WeightSlider(
+                                    controller: ScrollController(),
+                                    minValue: 1,
+                                    maxValue: 500,
+                                    width: MediaQuery.of(context).size.width,
+                                    value: infoUser.initialWeight,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        infoUser.initialWeight = value;
                                       });
-                                });
-                              },
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                      Container(
-                        height: 100.0,
-                        child: WeightSlider(
-                          minValue: 1,
-                          maxValue: 500,
-                          width: MediaQuery.of(context).size.width,
-                          value: infoUser.initialWeight,
-                          onChanged: (value) {
-                            setState(() {
-                              infoUser.initialWeight = value;
-                            });
-                          },
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  DemoLocalizations.of(context).objectiveWeight,
-                  style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Card(
-                color: AppThemes.GREY_GREENER,
-                margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                '${infoUser.objectiveWeight}' ?? '',
-                                style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 7.0),
-                                child: Text(
-                                  infoUser.objectiveWeight != null ? 'kg' : '',
-                                  style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            DemoLocalizations.of(context).objectiveWeight,
+                            style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                           ),
-                          Expanded(
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextFormField(
-                                  controller: TextEditingController(text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight)),
-                                  style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    hintText: DemoLocalizations.of(context).email,
-                                    filled: true,
-                                    fillColor: AppThemes.CYAN,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        Card(
+                          color: AppThemes.GREY_GREENER,
+                          margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          '${infoUser.objectiveWeight}' ?? '',
+                                          style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 7.0),
+                                          child: Text(
+                                            infoUser.objectiveWeight != null ? 'kg' : '',
+                                            style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  enabled: false,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (BuildContext builder) {
-                                        return Container(
-                                            height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                            child: CupertinoDatePicker(
-                                              initialDateTime: infoUser.dateObjectiveWeight,
-                                              onDateTimeChanged: (DateTime newdate) {
-                                                setState(() {
-                                                  infoUser.dateObjectiveWeight = newdate;
-                                                  DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight);
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller: TextEditingController(
+                                                text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight)),
+                                            style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                            decoration: InputDecoration(
+                                              hintText: DemoLocalizations.of(context).email,
+                                              filled: true,
+                                              fillColor: AppThemes.CYAN,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (BuildContext builder) {
+                                                  return Container(
+                                                      height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                      child: CupertinoDatePicker(
+                                                        initialDateTime: infoUser.dateObjectiveWeight,
+                                                        onDateTimeChanged: (DateTime newdate) {
+                                                          setState(() {
+                                                            infoUser.dateObjectiveWeight = newdate;
+                                                            DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight);
+                                                          });
+                                                        },
+                                                        maximumDate: new DateTime.now(),
+                                                        minimumYear: 1900,
+                                                        mode: CupertinoDatePickerMode.date,
+                                                      ));
                                                 });
-                                              },
-                                              maximumDate: new DateTime.now(),
-                                              minimumYear: 1900,
-                                              mode: CupertinoDatePickerMode.date,
-                                            ));
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 100.0,
+                                  child: WeightSlider(
+                                    controller: ScrollController(),
+                                    minValue: 1,
+                                    maxValue: 500,
+                                    width: MediaQuery.of(context).size.width,
+                                    value: infoUser.objectiveWeight,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        infoUser.objectiveWeight = value;
                                       });
-                                });
-                              },
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                      Container(
-                        height: 100.0,
-                        child: WeightSlider(
-                          minValue: 1,
-                          maxValue: 500,
-                          width: MediaQuery.of(context).size.width,
-                          value: infoUser.objectiveWeight,
-                          onChanged: (value) {
-                            setState(() {
-                              infoUser.objectiveWeight = value;
-                            });
-                          },
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+              infoUser.activeObjectives
+                  ? Container()
+                  : Container(
+                      color: AppThemes.BLACK_BLUE,
+                      child: Center(
+                          child: Text(
+                        'Objetivos desactivados',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
+                      )),
+                    ),
             ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }

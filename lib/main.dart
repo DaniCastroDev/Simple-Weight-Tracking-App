@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/screens/signin_screen.dart';
 import 'appthemes.dart';
 
-void main() => runApp(MainApp());
+void main() {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(MainApp());
+  });
+}
 
 class MainApp extends StatelessWidget {
   @override
@@ -12,6 +17,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        unselectedWidgetColor: AppThemes.CYAN,
         bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
         fontFamily: 'Montserrat',
         canvasColor: AppThemes.BLACK_BLUE,

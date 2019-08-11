@@ -14,7 +14,8 @@ InfoUser _$InfoUserFromJson(Map<dynamic, dynamic> json) {
       initialWeight: (json['initialWeight'] as num)?.toDouble(),
       dateInitialWeight: json['dateInitialWeight'] == null ? null : DateTime.fromMillisecondsSinceEpoch(json['dateInitialWeight']),
       dateObjectiveWeight: json['dateObjectiveWeight'] == null ? null : DateTime.fromMillisecondsSinceEpoch(json['dateObjectiveWeight']),
-      objectiveWeight: (json['objectiveWeight'] as num)?.toDouble());
+      objectiveWeight: (json['objectiveWeight'] as num)?.toDouble(),
+      activeObjectives: (json['activeObjectives'] as bool));
 }
 
 Map<dynamic, dynamic> _$InfoUserToJson(InfoUser instance) => <String, dynamic>{
@@ -24,5 +25,6 @@ Map<dynamic, dynamic> _$InfoUserToJson(InfoUser instance) => <String, dynamic>{
       'initialWeight': instance.initialWeight,
       'dateObjectiveWeight': instance.dateObjectiveWeight?.millisecondsSinceEpoch,
       'objectiveWeight': instance.objectiveWeight,
-      'height': instance.height
+      'height': instance.height,
+      'activeObjectives': instance.activeObjectives
     };

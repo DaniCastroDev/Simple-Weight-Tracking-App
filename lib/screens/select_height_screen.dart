@@ -47,19 +47,7 @@ class _HeightScreenState extends State<HeightScreen> {
                     borderColor: Colors.black,
                     backgroundColor: Colors.red,
                     messageText: Text(
-                      'An error has ocurred. Please, try again later',
-                      style: TextStyle(color: AppThemes.BLACK_BLUE),
-                    ),
-                    duration: Duration(seconds: 3),
-                  ).show(context);
-                }).whenComplete(() {
-                  Flushbar(
-                    margin: EdgeInsets.all(8),
-                    borderRadius: 8,
-                    borderColor: Colors.black,
-                    backgroundColor: AppThemes.CYAN,
-                    messageText: Text(
-                      'NICE',
+                      DemoLocalizations.of(context).undefinedError,
                       style: TextStyle(color: AppThemes.BLACK_BLUE),
                     ),
                     duration: Duration(seconds: 3),
@@ -135,6 +123,7 @@ class _HeightScreenState extends State<HeightScreen> {
                   width: 80.0,
                   height: MediaQuery.of(context).size.height / 1.4,
                   child: WeightSlider(
+                    controller: ScrollController(),
                     minValue: 1,
                     maxValue: 300,
                     isHeight: true,

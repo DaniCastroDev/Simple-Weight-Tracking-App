@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
+import 'package:simple_weight_tracking_app/screens/signin_screen.dart';
+import 'package:simple_weight_tracking_app/utils/fade_transition.dart';
 import 'package:simple_weight_tracking_app/widgets/loading_indicator.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,8 +18,9 @@ class RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController2 = TextEditingController();
   bool _loading = false;
-  bool _terms = false;
+  bool _terms = true;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +85,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     TextFormField(
+                      controller: _passwordController2,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: DemoLocalizations.of(context).repeatPassword,
@@ -92,50 +96,53 @@ class RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
+//                    Padding(
+//                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                      child: Row(
+//                        children: <Widget>[
+//                          Checkbox(
+//                            value: _terms,
+//                            onChanged: (value) {
+//                              setState(() {
+//                                _terms = value;
+//                              });
+//                            },
+//                            checkColor: AppThemes.BLACK_BLUE,
+//                            activeColor: AppThemes.CYAN,
+//                          ),
+//                          Expanded(
+//                            child: Text(
+//                              DemoLocalizations.of(context).termsAndConditions,
+//                              style: TextStyle(color: AppThemes.CYAN),
+//                            ),
+//                          )
+//                        ],
+//                      ),
+//                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        children: <Widget>[
-                          Checkbox(
-                            value: _terms,
-                            onChanged: (value) {
-                              setState(() {
-                                _terms = value;
-                              });
-                            },
-                            checkColor: AppThemes.BLACK_BLUE,
-                            activeColor: AppThemes.CYAN,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                        color: AppThemes.CYAN,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                DemoLocalizations.of(context).register.toUpperCase(),
+                                style: TextStyle(color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Text(
-                              DemoLocalizations.of(context).termsAndConditions,
-                              style: TextStyle(color: AppThemes.CYAN),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                      color: AppThemes.CYAN,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              DemoLocalizations.of(context).register.toUpperCase(),
-                              style: TextStyle(color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                            ),
-                          ],
                         ),
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          if (_formKey.currentState.validate()) {
+                            _register();
+                          }
+                        },
                       ),
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        if (_formKey.currentState.validate()) {
-                          _register();
-                        }
-                      },
                     ),
                   ],
                 ),
@@ -156,46 +163,84 @@ class RegisterScreenState extends State<RegisterScreen> {
     // Clean up the controller when the Widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordController2.dispose();
     super.dispose();
   }
 
   // Example code for registration.
   void _register() async {
-    setState(() {
-      _loading = true;
-    });
-    final FirebaseUser user = await _auth
-        .createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    )
-        .catchError((error) {
-      String message;
-      switch (error.code) {
-        case 'ERROR_EMAIL_ALREADY_IN_USE':
-          message = 'Correo electrónico en uso';
-          break;
-        case 'ERROR_WEAK_PASSWORD':
-          message = 'La contraseña debe tener por lo menos 6 caracteres';
-          break;
-        case 'ERROR_INVALID_EMAIL':
-          message = 'El correo electrónico no es válido';
-          break;
-        default:
-          message = error.code;
-          break;
-      }
+    if (!_terms) {
       Flushbar(
         margin: EdgeInsets.all(8),
         borderRadius: 8,
         backgroundColor: Colors.red,
-        messageText: Text(message),
+        messageText: Text(
+          DemoLocalizations.of(context).mustAcceptTerms,
+          style: TextStyle(color: AppThemes.BLACK_BLUE, fontSize: 16.0),
+        ),
         duration: Duration(seconds: 3),
       ).show(context);
-    }).whenComplete(() {
-      setState(() {
-        _loading = false;
-      });
-    });
+    } else {
+      if (_passwordController.text != _passwordController2.text) {
+        Flushbar(
+          margin: EdgeInsets.all(8),
+          borderRadius: 8,
+          backgroundColor: Colors.red,
+          messageText: Text(
+            DemoLocalizations.of(context).differentPasswords,
+            style: TextStyle(color: AppThemes.BLACK_BLUE, fontSize: 16.0),
+          ),
+          duration: Duration(seconds: 3),
+        ).show(context);
+      } else {
+        setState(() {
+          _loading = true;
+        });
+        await _auth
+            .createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        )
+            .catchError((error) {
+          String message;
+          switch (error.code) {
+            case 'ERROR_EMAIL_ALREADY_IN_USE':
+              message = DemoLocalizations.of(context).mailInUse;
+              break;
+            case 'ERROR_WEAK_PASSWORD':
+              message = DemoLocalizations.of(context).weakPassword;
+              break;
+            case 'ERROR_INVALID_EMAIL':
+              message = DemoLocalizations.of(context).invalidEmail;
+              break;
+            default:
+              message = error.code;
+              break;
+          }
+          setState(() {
+            _loading = false;
+          });
+
+          Flushbar(
+            margin: EdgeInsets.all(8),
+            borderRadius: 8,
+            backgroundColor: Colors.red,
+            messageText: Text(
+              message,
+              style: TextStyle(color: AppThemes.BLACK_BLUE, fontSize: 16.0),
+            ),
+            duration: Duration(seconds: 3),
+          ).show(context);
+        }).then((user) {
+          setState(() {
+            _loading = false;
+          });
+          if (user != null) {
+            print(user.uid);
+            Navigator.of(context).pushAndRemoveUntil(FadeTransitionRoute(widget: SignInScreen()), (Route<dynamic> route) => false);
+          }
+        });
+      }
+    }
   }
 }

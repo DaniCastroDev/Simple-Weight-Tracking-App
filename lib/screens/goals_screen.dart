@@ -48,19 +48,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     borderColor: Colors.black,
                     backgroundColor: Colors.red,
                     messageText: Text(
-                      'An error has ocurred. Please, try again later',
-                      style: TextStyle(color: AppThemes.BLACK_BLUE),
-                    ),
-                    duration: Duration(seconds: 3),
-                  ).show(context);
-                }).whenComplete(() {
-                  Flushbar(
-                    margin: EdgeInsets.all(8),
-                    borderRadius: 8,
-                    borderColor: Colors.black,
-                    backgroundColor: AppThemes.CYAN,
-                    messageText: Text(
-                      'NICE',
+                      DemoLocalizations.of(context).undefinedError,
                       style: TextStyle(color: AppThemes.BLACK_BLUE),
                     ),
                     duration: Duration(seconds: 3),
@@ -91,230 +79,264 @@ class _GoalsScreenState extends State<GoalsScreen> {
             DemoLocalizations.of(context).objectives,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
           ),
+          actions: <Widget>[
+            Checkbox(
+              value: widget.infoUser.activeObjectives,
+              onChanged: (value) {
+                setState(() {
+                  widget.infoUser.activeObjectives = value;
+                });
+              },
+              checkColor: AppThemes.BLACK_BLUE,
+              activeColor: AppThemes.CYAN,
+            ),
+          ],
         ),
         bottomNavigationBar: bottomButton(),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Stack(
             children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      DemoLocalizations.of(context).initialWeight,
-                      style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Card(
-                    color: AppThemes.GREY_GREENER,
-                    margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    '${widget.infoUser.initialWeight}' ?? '',
-                                    style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 7.0),
-                                    child: Text(
-                                      widget.infoUser.initialWeight != null ? 'kg' : '',
-                                      style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: TextEditingController(
-                                          text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight)),
-                                      style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                                      decoration: InputDecoration(
-                                        hintText: DemoLocalizations.of(context).email,
-                                        filled: true,
-                                        fillColor: AppThemes.CYAN,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      enabled: false,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext builder) {
-                                            return Container(
-                                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                                child: CupertinoDatePicker(
-                                                  initialDateTime: widget.infoUser.dateInitialWeight,
-                                                  onDateTimeChanged: (DateTime newdate) {
-                                                    setState(() {
-                                                      widget.infoUser.dateInitialWeight = newdate;
-                                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight);
-                                                    });
-                                                  },
-                                                  maximumDate: new DateTime.now(),
-                                                  minimumYear: 1900,
-                                                  maximumYear: DateTime.now().year,
-                                                  mode: CupertinoDatePickerMode.date,
-                                                ));
-                                          });
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            DemoLocalizations.of(context).initialWeight,
+                            style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                            height: 100.0,
-                            child: WeightSlider(
-                              minValue: 1,
-                              maxValue: 500,
-                              width: MediaQuery.of(context).size.width,
-                              value: widget.infoUser.initialWeight,
-                              onChanged: (value) {
-                                setState(() {
-                                  widget.infoUser.initialWeight = value;
-                                });
-                              },
+                        ),
+                        Card(
+                          color: AppThemes.GREY_GREENER,
+                          margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          '${widget.infoUser.initialWeight}' ?? '',
+                                          style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 7.0),
+                                          child: Text(
+                                            widget.infoUser.initialWeight != null ? 'kg' : '',
+                                            style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller: TextEditingController(
+                                                text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight)),
+                                            style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                            decoration: InputDecoration(
+                                              hintText: DemoLocalizations.of(context).email,
+                                              filled: true,
+                                              fillColor: AppThemes.CYAN,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (BuildContext builder) {
+                                                  return Container(
+                                                      height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                      child: CupertinoDatePicker(
+                                                        initialDateTime: widget.infoUser.dateInitialWeight,
+                                                        onDateTimeChanged: (DateTime newdate) {
+                                                          setState(() {
+                                                            widget.infoUser.dateInitialWeight = newdate;
+                                                            DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateInitialWeight);
+                                                          });
+                                                        },
+                                                        maximumDate: new DateTime.now(),
+                                                        minimumYear: 1900,
+                                                        maximumYear: DateTime.now().year,
+                                                        mode: CupertinoDatePickerMode.date,
+                                                      ));
+                                                });
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 100.0,
+                                  child: WeightSlider(
+                                    controller: ScrollController(),
+                                    minValue: 1,
+                                    maxValue: 500,
+                                    width: MediaQuery.of(context).size.width,
+                                    value: widget.infoUser.initialWeight,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        widget.infoUser.initialWeight = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      DemoLocalizations.of(context).objectiveWeight,
-                      style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Card(
-                    color: AppThemes.GREY_GREENER,
-                    margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    '${widget.infoUser.objectiveWeight}' ?? '',
-                                    style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 7.0),
-                                    child: Text(
-                                      widget.infoUser.objectiveWeight != null ? 'kg' : '',
-                                      style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: TextEditingController(
-                                          text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight)),
-                                      style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
-                                      decoration: InputDecoration(
-                                        hintText: DemoLocalizations.of(context).email,
-                                        filled: true,
-                                        fillColor: AppThemes.CYAN,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      enabled: false,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext builder) {
-                                            return Container(
-                                                height: MediaQuery.of(context).copyWith().size.height / 3.5,
-                                                child: CupertinoDatePicker(
-                                                  initialDateTime: widget.infoUser.dateObjectiveWeight,
-                                                  onDateTimeChanged: (DateTime newdate) {
-                                                    setState(() {
-                                                      widget.infoUser.dateObjectiveWeight = newdate;
-                                                      DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight);
-                                                    });
-                                                  },
-                                                  maximumDate: new DateTime.now(),
-                                                  minimumYear: 1900,
-                                                  mode: CupertinoDatePickerMode.date,
-                                                ));
-                                          });
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            DemoLocalizations.of(context).objectiveWeight,
+                            style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                            height: 100.0,
-                            child: WeightSlider(
-                              minValue: 1,
-                              maxValue: 500,
-                              width: MediaQuery.of(context).size.width,
-                              value: widget.infoUser.objectiveWeight,
-                              onChanged: (value) {
-                                setState(() {
-                                  widget.infoUser.objectiveWeight = value;
-                                });
-                              },
+                        ),
+                        Card(
+                          color: AppThemes.GREY_GREENER,
+                          margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          '${widget.infoUser.objectiveWeight}' ?? '',
+                                          style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 7.0),
+                                          child: Text(
+                                            widget.infoUser.objectiveWeight != null ? 'kg' : '',
+                                            style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller: TextEditingController(
+                                                text: DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight)),
+                                            style: TextStyle(fontSize: 24.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+                                            decoration: InputDecoration(
+                                              hintText: DemoLocalizations.of(context).email,
+                                              filled: true,
+                                              fillColor: AppThemes.CYAN,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            enabled: false,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (BuildContext builder) {
+                                                  return Container(
+                                                      height: MediaQuery.of(context).copyWith().size.height / 3.5,
+                                                      child: CupertinoDatePicker(
+                                                        initialDateTime: widget.infoUser.dateObjectiveWeight,
+                                                        onDateTimeChanged: (DateTime newdate) {
+                                                          setState(() {
+                                                            widget.infoUser.dateObjectiveWeight = newdate;
+                                                            DateFormat.yMMMd(DemoLocalizations.of(context).locale.languageCode).format(widget.infoUser.dateObjectiveWeight);
+                                                          });
+                                                        },
+                                                        maximumDate: new DateTime.now(),
+                                                        minimumYear: 1900,
+                                                        mode: CupertinoDatePickerMode.date,
+                                                      ));
+                                                });
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 100.0,
+                                  child: WeightSlider(
+                                    controller: ScrollController(),
+                                    minValue: 1,
+                                    maxValue: 500,
+                                    width: MediaQuery.of(context).size.width,
+                                    value: widget.infoUser.objectiveWeight,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        widget.infoUser.objectiveWeight = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              widget.infoUser.activeObjectives
+                  ? Container()
+                  : AnimatedOpacity(
+                      opacity: widget.infoUser.activeObjectives ? 0.0 : 1.0,
+                      duration: Duration(milliseconds: 300),
+                      child: Container(
+                        color: AppThemes.BLACK_BLUE,
+                        child: Center(
+                            child: Text(
+                          'Objetivos desactivados',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
+                        )),
                       ),
                     ),
-                  ),
-                ],
-              ),
             ],
           ),
         ));

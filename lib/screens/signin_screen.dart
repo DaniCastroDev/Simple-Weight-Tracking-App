@@ -302,16 +302,16 @@ class SignInScreenState extends State<SignInScreen> {
       String message;
       switch (error.code) {
         case 'ERROR_EMAIL_ALREADY_IN_USE':
-          message = 'Correo electrónico en uso';
+          message = DemoLocalizations.of(context).mailInUse;
           break;
         case 'ERROR_WEAK_PASSWORD':
-          message = 'La contraseña debe tener por lo menos 6 caracteres';
+          message = DemoLocalizations.of(context).weakPassword;
           break;
         case 'ERROR_INVALID_EMAIL':
-          message = 'El correo electrónico no es válido';
+          message = DemoLocalizations.of(context).invalidEmail;
           break;
         case 'error':
-          message = 'El correo electrónico no es válido';
+          message = DemoLocalizations.of(context).invalidEmail;
           break;
         default:
           message = error.code;
@@ -357,16 +357,16 @@ class SignInScreenState extends State<SignInScreen> {
       String message;
       switch (error.code) {
         case 'ERROR_EMAIL_ALREADY_IN_USE':
-          message = 'Correo electrónico en uso';
+          message = DemoLocalizations.of(context).mailInUse;
           break;
         case 'ERROR_WEAK_PASSWORD':
-          message = 'La contraseña debe tener por lo menos 6 caracteres';
+          message = DemoLocalizations.of(context).weakPassword;
           break;
         case 'ERROR_INVALID_EMAIL':
-          message = 'El correo electrónico no es válido';
+          message = DemoLocalizations.of(context).invalidEmail;
           break;
         case 'ERROR_USER_NOT_FOUND':
-          message = 'No se ha encontrado ningún usuario con este email';
+          message = DemoLocalizations.of(context).userNotFound;
           break;
         default:
           message = error.code;

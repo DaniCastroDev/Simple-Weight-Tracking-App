@@ -60,6 +60,16 @@ class DemoLocalizations {
       'notifications': 'Notifications',
       'saveHeight': 'Save Height',
       'updateGoals': 'Update goals',
+      'availableSoon': 'Available soon',
+      'next': 'Next',
+      'previous': 'Previous',
+      'mailInUse': 'Mail already in use',
+      'weakPassword': 'The password must contain at least 6 characters',
+      'invalidEmail': 'Invalid email',
+      'userNotFound': 'Couldn\'t find any user with this email',
+      'undefinedError': 'An error has ocurred. Please try again later',
+      'differentPasswords': 'The passwords do not matchs',
+      'mustAcceptTerms': 'You must accept the terms and conditions to use the app',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -110,6 +120,16 @@ class DemoLocalizations {
       'notifications': 'Notificaciones',
       'saveHeight': 'Guardar altura',
       'updateGoals': 'Actualizar objetivos',
+      'availableSoon': 'Disponible pronto',
+      'next': 'Siguiente',
+      'previous': 'Anterior',
+      'mailInUse': 'Correo electrónico en uso',
+      'weakPassword': 'La contraseña debe tener por lo menos 6 caracteres',
+      'invalidEmail': 'El correo electrónico no es válido',
+      'userNotFound': 'No se ha encontrado ningún usuario con este email',
+      'undefinedError': 'Ha ocurrido un error. Inténtelo de nuevo más tarde',
+      'differentPasswords': 'Las contraseñas no coinciden',
+      'mustAcceptTerms': 'You must accept the terms and conditions to use the app',
     },
   };
 
@@ -303,6 +323,46 @@ class DemoLocalizations {
 
   String get updateGoals {
     return _localizedValues[locale.languageCode]['updateGoals'];
+  }
+
+  String get availableSoon {
+    return _localizedValues[locale.languageCode]['availableSoon'];
+  }
+
+  String get next {
+    return _localizedValues[locale.languageCode]['next'];
+  }
+
+  String get previous {
+    return _localizedValues[locale.languageCode]['previous'];
+  }
+
+  String get mailInUse {
+    return _localizedValues[locale.languageCode]['mailInUse'];
+  }
+
+  String get weakPassword {
+    return _localizedValues[locale.languageCode]['weakPassword'];
+  }
+
+  String get userNotFound {
+    return _localizedValues[locale.languageCode]['userNotFound'];
+  }
+
+  String get invalidEmail {
+    return _localizedValues[locale.languageCode]['invalidEmail'];
+  }
+
+  String get undefinedError {
+    return _localizedValues[locale.languageCode]['undefinedError'];
+  }
+
+  String get differentPasswords {
+    return _localizedValues[locale.languageCode]['differentPasswords'];
+  }
+
+  String get mustAcceptTerms {
+    return _localizedValues[locale.languageCode]['mustAcceptTerms'];
   }
 }
 

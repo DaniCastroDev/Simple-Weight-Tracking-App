@@ -9,6 +9,7 @@ import 'package:simple_weight_tracking_app/screens/drawer_screen.dart';
 import 'package:simple_weight_tracking_app/screens/stepper_screen.dart';
 import 'package:simple_weight_tracking_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:async/async.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -27,8 +28,18 @@ class _MainScreenState extends State<MainScreen> {
     print('Hola');
     await Navigator.push(
       context,
-      new MaterialPageRoute(builder: (context) => SelectWeightScreen()),
+      new MaterialPageRoute(
+          builder: (context) => SelectWeightScreen(
+                user: _user,
+              )),
     );
+  }
+
+//Change your streams here
+  Stream<List<QuerySnapshot>> getData() {
+    Stream stream1 = Firestore.instance.collection('userInfo').document(_user.uid).snapshots();
+    Stream stream2 = Firestore.instance.collection('weights').document(_user.uid).snapshots();
+    return StreamZip([stream1, stream2]);
   }
 
   @override
@@ -36,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
     weights.clear();
     return _user == null
         ? LoadingIndicator()
-        : StreamBuilder<Object>(
+        : StreamBuilder(
             stream: Firestore.instance.collection('userInfo').document(_user.uid).snapshots(),
             builder: (context, AsyncSnapshot snapshot1) {
               if (snapshot1.connectionState != ConnectionState.active) {

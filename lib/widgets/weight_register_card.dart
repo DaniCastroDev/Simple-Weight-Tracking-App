@@ -40,7 +40,7 @@ class WeightRegisterCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '${displayDate(weight.date)}',
+                  '${displayDate(context, weight.date)}',
                   style: TextStyle(color: AppThemes.GREY, fontSize: 14.0),
                 ),
                 Row(

@@ -10,9 +10,10 @@ import 'package:simple_weight_tracking_app/utils/dates.dart';
 enum Type { WEEKLY, MONTHLY, YEARLY }
 
 class WeightChart extends StatefulWidget {
+  final List<Weight> objectiveWeights;
   final List<Weight> weights;
   final bool isRetardUnits;
-  WeightChart(this.weights, this.isRetardUnits);
+  WeightChart({this.weights, this.isRetardUnits, this.objectiveWeights = const []});
 
   @override
   _WeightChartState createState() => _WeightChartState();
@@ -20,21 +21,23 @@ class WeightChart extends StatefulWidget {
 
 class _WeightChartState extends State<WeightChart> {
   Type tableType = Type.WEEKLY;
-  double maxValue = 0.0;
-  double minValue = 1000.0;
   bool containsInitialDate = false;
   bool containsTodayDate = false;
   @override
   Widget build(BuildContext context) {
+    List<FlSpot> predictedSpots = [];
     List<FlSpot> spots = [];
+    double maxValue = 0.0;
+    double minValue = 1000.0;
     widget.weights.sort((w1, w2) => w1.date.compareTo(w2.date));
 
     void addSpots(int days) {
+      //Real Spots
       DateTime today = onlyDate(DateTime.now());
       DateTime initialDay = today.subtract(Duration(days: days));
       List<FlSpot> flspots = [];
       widget.weights.forEach((weight) {
-        if (weight.date.isAtSameMomentAs(initialDay.add(Duration(days: 1)))) containsInitialDate = true;
+        if (weight.date.isAtSameMomentAs(initialDay)) containsInitialDate = true;
         if (weight.date.isAtSameMomentAs(today)) containsTodayDate = true;
         if (weight.date.isAfter(initialDay)) {
           Duration difference = initialDay.difference(onlyDate(weight.date));
@@ -43,11 +46,21 @@ class _WeightChartState extends State<WeightChart> {
           flspots.add(FlSpot(difference.inDays.abs().toDouble(), weight.weight));
         }
       });
+
       if (!containsInitialDate) spots.add(FlSpot(1, widget.weights.first.weight));
       flspots.forEach((_spot) {
         spots.add(_spot);
       });
       if (!containsTodayDate) spots.add(FlSpot(days.toDouble(), widget.weights.last.weight));
+      //Predicted Spots
+      widget.objectiveWeights.forEach((weight) {
+        if (weight.date.isAfter(initialDay) && weight.date.isBefore(today.add(Duration(days: 1)))) {
+          Duration difference = initialDay.difference(onlyDate(weight.date));
+          if (minValue > weight.weight) minValue = weight.weight;
+          if (maxValue < weight.weight) maxValue = weight.weight;
+          predictedSpots.add(FlSpot(difference.inDays.abs().toDouble(), weight.weight));
+        }
+      });
     }
 
     switch (tableType) {
@@ -66,6 +79,22 @@ class _WeightChartState extends State<WeightChart> {
       setState(() {
         tableType = value;
       });
+    }
+
+    double getSmoothnes() {
+      switch (tableType) {
+        case Type.WEEKLY:
+          return 0.35;
+          break;
+        case Type.MONTHLY:
+          return 0.1;
+          break;
+        case Type.YEARLY:
+          return 0.0;
+          break;
+        default:
+          return 0.0;
+      }
     }
 
     return Column(
@@ -113,14 +142,28 @@ class _WeightChartState extends State<WeightChart> {
           child: FlChart(
             chart: LineChart(
               LineChartData(
-                minY: minValue,
+                minY: minValue - 1.0,
                 maxY: maxValue + 1.0,
                 borderData: FlBorderData(
                   show: false,
                 ),
                 lineBarsData: [
                   LineChartBarData(
-                    curveSmoothness: 0.2,
+                    curveSmoothness: getSmoothnes(),
+                    isStrokeCapRound: true,
+                    spots: predictedSpots.length > 0 ? predictedSpots : spots,
+                    isCurved: true,
+                    barWidth: 3,
+                    colors: [
+                      AppThemes.GREY,
+                    ],
+                    belowBarData: BelowBarData(show: false),
+                    dotData: FlDotData(
+                      show: false,
+                    ),
+                  ),
+                  LineChartBarData(
+                    curveSmoothness: getSmoothnes(),
                     isStrokeCapRound: true,
                     spots: spots,
                     isCurved: true,
@@ -185,11 +228,11 @@ class _WeightChartState extends State<WeightChart> {
                   getHorizontalTitles: (value) {
                     switch (tableType) {
                       case Type.WEEKLY:
-                        return DateFormat('E', DemoLocalizations.of(context).locale.languageCode).format(DateTime.now().subtract(Duration(days: (6 - value).toInt())));
+                        return DateFormat('E', DemoLocalizations.of(context).locale.languageCode).format(DateTime.now().subtract(Duration(days: (7 - value).toInt())));
                         break;
                       case Type.MONTHLY:
                         if (value % 5 == 0)
-                          return DateFormat('d/MM', DemoLocalizations.of(context).locale.languageCode).format(DateTime.now().subtract(Duration(days: (29 - value).toInt())));
+                          return DateFormat('d', DemoLocalizations.of(context).locale.languageCode).format(DateTime.now().subtract(Duration(days: (30 - value).toInt())));
                         return '';
                         break;
                       case Type.YEARLY:
@@ -202,7 +245,15 @@ class _WeightChartState extends State<WeightChart> {
                     }
                   },
                   getVerticalTitles: (value) {
-                    return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                    int valueInt = value.floor();
+                    if (maxValue - minValue > 20) {
+                      if (valueInt % 5 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                    } else if (maxValue - minValue > 10) {
+                      if (valueInt % 2 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                    } else if (maxValue - minValue < 10) {
+                      if (valueInt % 1 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                    }
+                    return '';
                   },
                   horizontalTitlesTextStyle: TextStyle(
                     color: Colors.white,
@@ -223,7 +274,5 @@ class _WeightChartState extends State<WeightChart> {
         ),
       ],
     );
-
-    getSpots() {}
   }
 }

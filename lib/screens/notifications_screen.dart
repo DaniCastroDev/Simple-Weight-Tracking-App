@@ -13,14 +13,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var time = new Time(17, 58, 0);
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('your other channel id', 'your other channel name', 'your other channel description');
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    NotificationDetails platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    flutterLocalNotificationsPlugin.cancelAll();
-    flutterLocalNotificationsPlugin.showDailyAtTime(
-        0, 'show daily title', 'Daily notification shown at approximately ${time.hour}:${time.minute}:${time.second}', time, platformChannelSpecifics);
+//    var time = new Time(17, 58, 0);
+//    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+//    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('your other channel id', 'your other channel name', 'your other channel description');
+//    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+//    NotificationDetails platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+//    flutterLocalNotificationsPlugin.cancelAll();
+//    flutterLocalNotificationsPlugin.showDailyAtTime(
+//        0, 'show daily title', 'Daily notification shown at approximately ${time.hour}:${time.minute}:${time.second}', time, platformChannelSpecifics);
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -40,7 +40,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
         ),
       ),
-      body: Center(child: Text('Notificaciones')),
+      body: Center(
+          child: Text(
+        DemoLocalizations.of(context).availableSoon,
+        style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.bold),
+      )),
     );
   }
 }

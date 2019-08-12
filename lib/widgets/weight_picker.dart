@@ -61,12 +61,13 @@ class _WeightSliderState extends State<WeightSlider> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      builderValue % 5 == 0
-                          ? Text(
-                              widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
-                              style: TextStyle(color: AppThemes.GREY, fontSize: widget.isHeight ? 20.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
-                            )
-                          : Text(''),
+                      Container(),
+//                      builderValue % 5 == 0
+//                          ? Text(
+//                              widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
+//                              style: TextStyle(color: AppThemes.GREY, fontSize: widget.isHeight ? 20.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
+//                            )
+//                          : Text(''),
                       builderValue % 10 == 0
                           ? Container(
                               decoration: ShapeDecoration(
@@ -114,23 +115,23 @@ class _WeightSliderState extends State<WeightSlider> {
                               height: widget.isHeight ? widget.value == builderValue ? 5 : 1 : widget.value * 10 == builderValue ? 20 : 10,
                               width: widget.isHeight ? widget.value == builderValue ? 20 : 10 : widget.value * 10 == builderValue ? 5 : 1,
                             ),
-                      Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: widget.isHeight
-                              ? builderValue % 5 == 0
-                                  ? Text(
-                                      widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
-                                      style: TextStyle(
-                                          color: AppThemes.GREY, fontSize: widget.isHeight ? builderValue.toInt() > 99 ? 11.0 : 14.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
-                                    )
-                                  : Text('')
-                              : builderValue % 10 == 0
-                                  ? Text(
-                                      widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
-                                      style: TextStyle(
-                                          color: AppThemes.GREY, fontSize: widget.isHeight ? builderValue.toInt() > 99 ? 11.0 : 14.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
-                                    )
-                                  : Text('')),
+//                      Padding(
+//                          padding: const EdgeInsets.only(top: 10.0),
+//                          child: widget.isHeight
+//                              ? builderValue % 5 == 0
+//                                  ? Text(
+//                                      widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
+//                                      style: TextStyle(
+//                                          color: AppThemes.GREY, fontSize: widget.isHeight ? builderValue.toInt() > 99 ? 11.0 : 14.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
+//                                    )
+//                                  : Text('')
+//                              : builderValue % 10 == 0
+//                                  ? Text(
+//                                      widget.isHeight ? '${builderValue.toInt()}' : '${builderValue ~/ 10}',
+//                                      style: TextStyle(
+//                                          color: AppThemes.GREY, fontSize: widget.isHeight ? builderValue.toInt() > 99 ? 11.0 : 14.0 : (builderValue ~/ 10) > 99 ? 11.0 : 14.0),
+//                                    )
+//                                  : Text('')),
                     ],
                   );
       },

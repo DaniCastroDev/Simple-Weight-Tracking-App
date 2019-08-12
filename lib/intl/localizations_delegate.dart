@@ -70,6 +70,7 @@ class DemoLocalizations {
       'undefinedError': 'An error has ocurred. Please try again later',
       'differentPasswords': 'The passwords do not matchs',
       'mustAcceptTerms': 'You must accept the terms and conditions to use the app',
+      'goalsDisabled': 'Goals disabled',
     },
     'es': {
       'ibmTitle': 'Calculadora de IMC',
@@ -130,6 +131,7 @@ class DemoLocalizations {
       'undefinedError': 'Ha ocurrido un error. Inténtelo de nuevo más tarde',
       'differentPasswords': 'Las contraseñas no coinciden',
       'mustAcceptTerms': 'You must accept the terms and conditions to use the app',
+      'goalsDisabled': 'Objetivos desactivados',
     },
   };
 
@@ -363,6 +365,10 @@ class DemoLocalizations {
 
   String get mustAcceptTerms {
     return _localizedValues[locale.languageCode]['mustAcceptTerms'];
+  }
+
+  String get goalsDisabled {
+    return _localizedValues[locale.languageCode]['goalsDisabled'];
   }
 }
 

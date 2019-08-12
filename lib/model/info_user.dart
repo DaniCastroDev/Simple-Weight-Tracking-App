@@ -11,8 +11,18 @@ class InfoUser {
   double objectiveWeight;
   double height;
   bool activeObjectives;
+  bool retardedUnits;
 
-  InfoUser({this.gender, this.dateOfBirth, this.height, this.initialWeight, this.dateInitialWeight, this.dateObjectiveWeight, this.objectiveWeight, this.activeObjectives});
+  InfoUser(
+      {this.gender,
+      this.dateOfBirth,
+      this.height,
+      this.initialWeight,
+      this.dateInitialWeight,
+      this.dateObjectiveWeight,
+      this.objectiveWeight,
+      this.activeObjectives,
+      this.retardedUnits});
 
   factory InfoUser.fromJson(Map<dynamic, dynamic> json) => _$InfoUserFromJson(json);
   Map<dynamic, dynamic> toJson() => _$InfoUserToJson(this);

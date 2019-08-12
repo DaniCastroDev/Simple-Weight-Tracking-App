@@ -7,27 +7,23 @@ double calculateIBM(double weight, double height) {
   return weight / (height * height);
 }
 
-double kgToLb(double weight) {
-  return weight * 2.20462262185;
-}
-
 String getCategory(double ibm, context) {
   if (ibm < 16.0) {
-    return DemoLocalizations.of(context).lowWeight;
+    return '${DemoLocalizations.of(context).lowWeight} III';
   } else if (ibm < 17.0) {
-    return DemoLocalizations.of(context).lowWeight;
+    return '${DemoLocalizations.of(context).lowWeight} II';
   } else if (ibm < 18.5) {
-    return DemoLocalizations.of(context).lowWeight;
+    return '${DemoLocalizations.of(context).lowWeight} I';
   } else if (ibm < 24.9) {
     return DemoLocalizations.of(context).normalWeight;
   } else if (ibm < 29.9) {
     return DemoLocalizations.of(context).overWeight;
   } else if (ibm < 34.9) {
-    return DemoLocalizations.of(context).obesityWeight;
+    return '${DemoLocalizations.of(context).obesityWeight} I';
   } else if (ibm < 39.9) {
-    return DemoLocalizations.of(context).obesityWeight;
+    return '${DemoLocalizations.of(context).obesityWeight} II';
   } else {
-    return DemoLocalizations.of(context).obesityWeight;
+    return '${DemoLocalizations.of(context).obesityWeight} III';
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/screens/general_screen.dart';
 import 'package:simple_weight_tracking_app/screens/goals_screen.dart';
 import 'package:simple_weight_tracking_app/screens/select_height_screen.dart';
+import 'package:simple_weight_tracking_app/screens/settings_screen.dart';
 import 'package:simple_weight_tracking_app/screens/signin_screen.dart';
 import 'package:simple_weight_tracking_app/utils/fade_transition.dart';
 import 'package:simple_weight_tracking_app/widgets/profile_button.dart';
@@ -36,6 +37,7 @@ class _DrawerScreenState extends State<DrawerScreen> with AutomaticKeepAliveClie
       DemoLocalizations.of(context).objectives,
       DemoLocalizations.of(context).height,
       DemoLocalizations.of(context).notifications,
+      DemoLocalizations.of(context).settings,
       DemoLocalizations.of(context).closeSession,
       DemoLocalizations.of(context).closeApp,
     ];
@@ -50,6 +52,7 @@ class _DrawerScreenState extends State<DrawerScreen> with AutomaticKeepAliveClie
       FontAwesomeIcons.bullseye,
       FontAwesomeIcons.rulerVertical,
       Icons.notifications_active,
+      Icons.settings,
       Icons.arrow_back,
       Icons.exit_to_app,
     ];
@@ -77,7 +80,14 @@ class _DrawerScreenState extends State<DrawerScreen> with AutomaticKeepAliveClie
       case 3:
         body = NotificationsScreen();
         break;
+      case 4:
+        body = SettingsScreen(
+          user: widget.user,
+          infoUser: widget.infoUser,
+        );
+        break;
     }
+    print(MediaQuery.of(context).size.height.toString());
     return Scaffold(
         backgroundColor: AppThemes.BLACK_BLUE,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -106,7 +116,7 @@ class _DrawerScreenState extends State<DrawerScreen> with AutomaticKeepAliveClie
                         ],
                       ),
                     ),
-              MediaQuery.of(context).size.height < 1000
+              MediaQuery.of(context).size.height < 700
                   ? Container()
                   : Divider(
                       color: AppThemes.CYAN,
@@ -151,43 +161,15 @@ class _DrawerScreenState extends State<DrawerScreen> with AutomaticKeepAliveClie
                           }
                           Navigator.of(context).pop();
                         },
+                        () {
+                          if (_selectedIndex != index) {
+                            setState(() {
+                              _selectedIndex = index;
+                            });
+                          }
+                          Navigator.of(context).pop();
+                        },
                       ];
-                      if (index == 4) {
-                        return Column(
-                          children: <Widget>[
-                            Divider(
-                              color: AppThemes.CYAN,
-                              indent: 10.0,
-                              endIndent: 10.0,
-                            ),
-                            Container(
-                              color: _selectedIndex == index ? AppThemes.CYAN : Colors.transparent,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Container(
-                                  color: _selectedIndex == index ? AppThemes.GREEN_GREYER : Colors.transparent,
-                                  child: ListTile(
-                                    leading: Icon(
-                                      _iconOptions[index],
-                                      color: _selectedIndex == index ? AppThemes.BLACK_BLUE : AppThemes.CYAN,
-                                    ),
-                                    selected: _selectedIndex == index,
-                                    title: Text(
-                                      _drawerOptions[index],
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    onTap: _actions[index],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }
                       return Container(
                         color: _selectedIndex == index ? AppThemes.CYAN : Colors.transparent,
                         child: Padding(

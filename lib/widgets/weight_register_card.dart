@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 
 class WeightRegisterCard extends StatelessWidget {
   final Weight weight;
   final double difference;
+  final bool isRetarded;
 
-  const WeightRegisterCard({Key key, this.weight, this.difference}) : super(key: key);
+  const WeightRegisterCard({Key key, this.weight, this.difference, this.isRetarded}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class WeightRegisterCard extends StatelessWidget {
                     icon != null ? Icon(icon, color: differenceColor) : Container(),
                     icon != null
                         ? Text(
-                            '${difference.abs().toStringAsFixed(2)} kg',
+                            '${getCorrectWeight(isRetarded, difference.abs())}${getUnitOfMeasure(isRetarded)}',
                             style: TextStyle(color: differenceColor, fontWeight: FontWeight.bold),
                           )
                         : Container(),
@@ -64,13 +66,13 @@ class WeightRegisterCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  '${weight.weight}',
+                  '${getCorrectWeight(isRetarded, weight.weight)}',
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30.0),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 3.0),
+                  padding: const EdgeInsets.only(bottom: 6.0),
                   child: Text(
-                    'kg',
+                    getUnitOfMeasure(isRetarded),
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
                   ),
                 ),

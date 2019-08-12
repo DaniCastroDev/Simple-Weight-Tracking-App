@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
+import 'package:simple_weight_tracking_app/model/info_user.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SelectWeightScreen extends StatefulWidget {
   final FirebaseUser user;
+  final InfoUser infoUser;
 
-  const SelectWeightScreen({Key key, @required this.user}) : super(key: key);
+  const SelectWeightScreen({Key key, @required this.user, this.infoUser}) : super(key: key);
 
   @override
   _SelectWeightScreenState createState() => _SelectWeightScreenState();
@@ -44,7 +47,7 @@ class _SelectWeightScreenState extends State<SelectWeightScreen> {
         weights.sort((w1, w2) => w1.date.compareTo(w2.date));
         values = Map.fromIterable(weights, key: (w) => (w as Weight).date, value: (w) => (w as Weight).weight);
         events = Map.fromIterable(weights, key: (item) => (item as Weight).date, value: (item) => [item]);
-        return Content(values, events, weights, widget.user);
+        return Content(values, events, weights, widget.user, widget.infoUser);
       },
     );
   }
@@ -55,8 +58,9 @@ class Content extends StatefulWidget {
   final Map<DateTime, List> events;
   final List<Weight> weights;
   final FirebaseUser user;
+  final InfoUser infoUser;
 
-  const Content(this.values, this.events, this.weights, this.user);
+  const Content(this.values, this.events, this.weights, this.user, this.infoUser);
   @override
   _ContentState createState() => _ContentState();
 }
@@ -67,7 +71,7 @@ class _ContentState extends State<Content> {
   ScrollController controller = ScrollController();
   @override
   void initState() {
-    currentWeight = getDateWeight(date);
+    currentWeight = getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, getDateWeight(date));
     super.initState();
   }
 
@@ -91,17 +95,30 @@ class _ContentState extends State<Content> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: MaterialButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        color: AppThemes.CYAN,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
-          child: Text(
-            DemoLocalizations.of(context).save.toUpperCase(),
-            style: TextStyle(letterSpacing: 3.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          MaterialButton(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            color: AppThemes.CYAN,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
+              child: Text(
+                DemoLocalizations.of(context).save.toUpperCase(),
+                style: TextStyle(letterSpacing: 3.0, color: AppThemes.BLACK_BLUE, fontWeight: FontWeight.bold),
+              ),
+            ),
+            onPressed: () => _addWeight(context),
           ),
-        ),
-        onPressed: () => _addWeight(context),
+          FloatingActionButton(
+            backgroundColor: AppThemes.CYAN,
+            child: Icon(
+              Icons.add,
+              color: AppThemes.BLACK_BLUE,
+            ),
+            onPressed: () => _addWeightAndContinue(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -124,9 +141,8 @@ class _ContentState extends State<Content> {
                       weekendStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       unavailableStyle: TextStyle(color: AppThemes.GREY, fontWeight: FontWeight.bold),
                       markersMaxAmount: 1,
-                      markersAlignment: Alignment.center,
+                      markersAlignment: Alignment.centerRight,
                       markersColor: AppThemes.CYAN,
-                      markersPositionBottom: 7.0,
                       outsideDaysVisible: false,
                       todayColor: AppThemes.GREEN_GREYER,
                       todayStyle: TextStyle(color: Colors.black),
@@ -146,7 +162,7 @@ class _ContentState extends State<Content> {
                     ),
                     daysOfWeekStyle: DaysOfWeekStyle(
                       dowTextBuilder: (DateTime date, locale) {
-                        return DateFormat('E', 'es').format(date).substring(0, 1).toUpperCase();
+                        return DateFormat.E(DemoLocalizations.of(context).locale.languageCode).format(date).substring(0, 1).toUpperCase();
                       },
                       weekdayStyle: TextStyle(color: Colors.white, fontSize: 10.0),
                       weekendStyle: TextStyle(color: Colors.white, fontSize: 10.0),
@@ -159,14 +175,24 @@ class _ContentState extends State<Content> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '$currentWeight' ?? '',
-                  style: TextStyle(color: Colors.white, fontSize: 60.0, fontWeight: FontWeight.bold),
+                  '${currentWeight.toStringAsFixed(1)}' ?? '',
+                  style: TextStyle(
+                      color: getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, getDateWeight(onlyDate(date))) == currentWeight && widget.values.containsKey(date)
+                          ? Colors.white
+                          : AppThemes.GREY,
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.bold),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 11.0),
                   child: Text(
-                    currentWeight != null ? 'kg' : '',
-                    style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                    currentWeight != null ? getUnitOfMeasure(widget.infoUser.retardedUnits) : '',
+                    style: TextStyle(
+                        color: getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, getDateWeight(onlyDate(date))) == currentWeight && widget.values.containsKey(date)
+                            ? Colors.white
+                            : AppThemes.GREY,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -175,7 +201,7 @@ class _ContentState extends State<Content> {
               height: 100.0,
               child: WeightSlider(
                 minValue: 1,
-                maxValue: 500,
+                maxValue: 1000,
                 width: MediaQuery.of(context).size.width,
                 value: currentWeight,
                 controller: controller,
@@ -202,7 +228,7 @@ class _ContentState extends State<Content> {
       print('CHANGED DATE TO ${datetime.day} / ${datetime.month}');
       DateTime _onlyDate = onlyDate(datetime);
       date = _onlyDate;
-      currentWeight = getDateWeight(_onlyDate);
+      currentWeight = getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, getDateWeight(_onlyDate));
       controller.jumpTo(
           ((MediaQuery.of(context).size.width / 20) * (currentWeight - 1) * 10) - ((MediaQuery.of(context).size.width / 20) / 2) + ((MediaQuery.of(context).size.width / 20)));
     });
@@ -221,12 +247,24 @@ class _ContentState extends State<Content> {
   /// El peso existe cuando existe un registro en la misma fecha.
 
   _addWeight(context) {
-    Weight _toAdd = Weight(date, currentWeight);
+    Weight _toAdd = Weight(date, getValueToDBWeightAsDouble(widget.infoUser.retardedUnits, currentWeight));
     widget.weights.removeWhere((w) => w.date.isAtSameMomentAs(date));
     print('Añadimos el valor ${_toAdd.date}, ${_toAdd.weight}');
     widget.weights.add(_toAdd);
 
     ListWeight listWeight = ListWeight(widget.weights);
-    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {});
+    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson()).then((_) {
+      Navigator.of(context).pop();
+    });
+  }
+
+  _addWeightAndContinue(context) {
+    Weight _toAdd = Weight(date, getValueToDBWeightAsDouble(widget.infoUser.retardedUnits, currentWeight));
+    widget.weights.removeWhere((w) => w.date.isAtSameMomentAs(date));
+    print('Añadimos el valor ${_toAdd.date}, ${_toAdd.weight}');
+    widget.weights.add(_toAdd);
+
+    ListWeight listWeight = ListWeight(widget.weights);
+    Firestore.instance.collection('weights').document(widget.user.uid).updateData(listWeight.toJson());
   }
 }

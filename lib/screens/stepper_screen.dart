@@ -10,6 +10,7 @@ import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/model/info_user.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 
 class StepperScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _StepperScreenState extends State<StepperScreen> {
     initialWeight: 70.0,
     objectiveWeight: 70.0,
     activeObjectives: true,
+    retardedUnits: false,
   );
   TextEditingController _controller = TextEditingController();
 
@@ -38,7 +40,7 @@ class _StepperScreenState extends State<StepperScreen> {
 
     return Scaffold(
       body: MultiPageForm(
-        totalPage: 3,
+        totalPage: 4,
         nextButtonStyle: Text(
           DemoLocalizations.of(context).next,
           style: TextStyle(fontSize: 20.0, color: AppThemes.CYAN, fontWeight: FontWeight.bold),
@@ -51,7 +53,7 @@ class _StepperScreenState extends State<StepperScreen> {
           DemoLocalizations.of(context).save,
           style: TextStyle(fontSize: 20.0, color: AppThemes.CYAN, fontWeight: FontWeight.bold),
         ),
-        pageList: <Widget>[sexAndBirth(), height(), weights()],
+        pageList: <Widget>[sexAndBirth(), units(), height(), weights()],
         onFormSubmitted: () {
           DocumentReference userInfoRef = Firestore.instance.collection("userInfo").document(widget.user.uid);
           DocumentReference weightsRef = Firestore.instance.collection("weights").document(widget.user.uid);
@@ -262,6 +264,63 @@ class _StepperScreenState extends State<StepperScreen> {
     ));
   }
 
+  Widget units() {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          DemoLocalizations.of(context).settings,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      color: infoUser.retardedUnits ? AppThemes.CYAN : Colors.transparent,
+                      border: Border.all(color: infoUser.retardedUnits ? AppThemes.CYAN : Colors.white),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: Text(
+                    DemoLocalizations.of(context).imperial.toUpperCase(),
+                    style: TextStyle(color: infoUser.retardedUnits ? AppThemes.BLACK_BLUE : AppThemes.CYAN, fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    infoUser.retardedUnits = true;
+                  });
+                },
+              ),
+              InkWell(
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      color: !infoUser.retardedUnits ? AppThemes.CYAN : Colors.transparent,
+                      border: Border.all(color: infoUser.retardedUnits ? AppThemes.CYAN : Colors.white),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: Text(
+                    DemoLocalizations.of(context).metric.toUpperCase(),
+                    style: TextStyle(color: !infoUser.retardedUnits ? AppThemes.BLACK_BLUE : AppThemes.CYAN, fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    infoUser.retardedUnits = false;
+                  });
+                },
+              ),
+            ],
+          )),
+    );
+  }
+
   Widget height() {
     return Scaffold(
         appBar: AppBar(
@@ -289,16 +348,31 @@ class _StepperScreenState extends State<StepperScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            '${infoUser.height.toInt()}' ?? '',
+                            '${getCorrectHeight(infoUser.retardedUnits, infoUser.height)}' ?? '',
                             style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 7.0),
                             child: Text(
-                              height != null ? 'cm' : '',
+                              infoUser.height != null ? infoUser.retardedUnits ? '' : 'cm' : '',
                               style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                             ),
                           ),
+                          infoUser.retardedUnits
+                              ? Text(
+                                  '${infoUser.height.toStringAsFixed(0)}' ?? '',
+                                  style: TextStyle(color: AppThemes.GREY, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                )
+                              : Container(),
+                          infoUser.retardedUnits
+                              ? Padding(
+                                  padding: const EdgeInsets.only(bottom: 3.0),
+                                  child: Text(
+                                    infoUser.height != null ? 'cm' : '',
+                                    style: TextStyle(color: AppThemes.GREY, fontSize: 10.0, fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
@@ -390,13 +464,13 @@ class _StepperScreenState extends State<StepperScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          '${infoUser.initialWeight}' ?? '',
+                                          '${getValueFromDBWeightAsDouble(infoUser.retardedUnits, infoUser.initialWeight)}' ?? '',
                                           style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 7.0),
                                           child: Text(
-                                            infoUser.initialWeight != null ? 'kg' : '',
+                                            infoUser.initialWeight != null ? getUnitOfMeasure(infoUser.retardedUnits) : '',
                                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -458,12 +532,12 @@ class _StepperScreenState extends State<StepperScreen> {
                                   child: WeightSlider(
                                     controller: ScrollController(),
                                     minValue: 1,
-                                    maxValue: 500,
+                                    maxValue: 1000,
                                     width: MediaQuery.of(context).size.width,
-                                    value: infoUser.initialWeight,
+                                    value: getValueFromDBWeightAsDouble(infoUser.retardedUnits, infoUser.initialWeight),
                                     onChanged: (value) {
                                       setState(() {
-                                        infoUser.initialWeight = value;
+                                        infoUser.initialWeight = getValueToDBWeightAsDouble(infoUser.retardedUnits, value);
                                       });
                                     },
                                   ),
@@ -500,13 +574,13 @@ class _StepperScreenState extends State<StepperScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          '${infoUser.objectiveWeight}' ?? '',
+                                          '${getValueFromDBWeightAsDouble(infoUser.retardedUnits, infoUser.objectiveWeight)}' ?? '',
                                           style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 7.0),
                                           child: Text(
-                                            infoUser.objectiveWeight != null ? 'kg' : '',
+                                            infoUser.initialWeight != null ? getUnitOfMeasure(infoUser.retardedUnits) : '',
                                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -567,12 +641,12 @@ class _StepperScreenState extends State<StepperScreen> {
                                   child: WeightSlider(
                                     controller: ScrollController(),
                                     minValue: 1,
-                                    maxValue: 500,
+                                    maxValue: 1000,
                                     width: MediaQuery.of(context).size.width,
-                                    value: infoUser.objectiveWeight,
+                                    value: getValueFromDBWeightAsDouble(infoUser.retardedUnits, infoUser.objectiveWeight),
                                     onChanged: (value) {
                                       setState(() {
-                                        infoUser.objectiveWeight = value;
+                                        infoUser.objectiveWeight = getValueToDBWeightAsDouble(infoUser.retardedUnits, value);
                                       });
                                     },
                                   ),
@@ -592,7 +666,7 @@ class _StepperScreenState extends State<StepperScreen> {
                       color: AppThemes.BLACK_BLUE,
                       child: Center(
                           child: Text(
-                        'Objetivos desactivados',
+                        DemoLocalizations.of(context).goalsDisabled,
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
                       )),
                     ),

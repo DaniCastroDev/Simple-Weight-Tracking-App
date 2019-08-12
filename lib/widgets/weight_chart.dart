@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
-import 'package:simple_weight_tracking_app/utils/bmi.dart';
 import 'package:simple_weight_tracking_app/utils/dates.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 
 enum Type { WEEKLY, MONTHLY, YEARLY }
 
@@ -245,13 +245,15 @@ class _WeightChartState extends State<WeightChart> {
                     }
                   },
                   getVerticalTitles: (value) {
-                    int valueInt = value.floor();
-                    if (maxValue - minValue > 20) {
-                      if (valueInt % 5 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                    int valueInt = getValueFromDBWeightAsDouble(widget.isRetardUnits, value).floor();
+                    if (maxValue - minValue > 30) {
+                      if (valueInt % 10 == 0) return '${getValueFromDBWeightAsDouble(widget.isRetardUnits, value).floor()} ${getUnitOfMeasure(widget.isRetardUnits)}';
+                    } else if (maxValue - minValue > 20) {
+                      if (valueInt % 5 == 0) return '${getValueFromDBWeightAsDouble(widget.isRetardUnits, value).floor()} ${getUnitOfMeasure(widget.isRetardUnits)}';
                     } else if (maxValue - minValue > 10) {
-                      if (valueInt % 2 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                      if (valueInt % 2 == 0) return '${getValueFromDBWeightAsDouble(widget.isRetardUnits, value).floor()} ${getUnitOfMeasure(widget.isRetardUnits)}';
                     } else if (maxValue - minValue < 10) {
-                      if (valueInt % 1 == 0) return widget.isRetardUnits ? '${kgToLb(value).toStringAsFixed(0)} lb' : '${value.toStringAsFixed(0)} kg';
+                      if (valueInt % 1 == 0) return '${getValueFromDBWeightAsDouble(widget.isRetardUnits, value).floor()} ${getUnitOfMeasure(widget.isRetardUnits)}';
                     }
                     return '';
                   },

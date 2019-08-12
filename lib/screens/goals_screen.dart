@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/model/info_user.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 
 class GoalsScreen extends StatefulWidget {
@@ -127,13 +128,13 @@ class _GoalsScreenState extends State<GoalsScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          '${widget.infoUser.initialWeight}' ?? '',
+                                          '${getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, widget.infoUser.initialWeight)}' ?? '',
                                           style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 7.0),
                                           child: Text(
-                                            widget.infoUser.initialWeight != null ? 'kg' : '',
+                                            widget.infoUser.initialWeight != null ? getUnitOfMeasure(widget.infoUser.retardedUnits) : '',
                                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -195,12 +196,12 @@ class _GoalsScreenState extends State<GoalsScreen> {
                                   child: WeightSlider(
                                     controller: ScrollController(),
                                     minValue: 1,
-                                    maxValue: 500,
-                                    width: MediaQuery.of(context).size.width,
-                                    value: widget.infoUser.initialWeight,
+                                    maxValue: 1000,
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    value: getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, widget.infoUser.initialWeight),
                                     onChanged: (value) {
                                       setState(() {
-                                        widget.infoUser.initialWeight = value;
+                                        widget.infoUser.initialWeight = getValueToDBWeightAsDouble(widget.infoUser.retardedUnits, value);
                                       });
                                     },
                                   ),
@@ -237,13 +238,13 @@ class _GoalsScreenState extends State<GoalsScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          '${widget.infoUser.objectiveWeight}' ?? '',
+                                          '${getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, widget.infoUser.objectiveWeight)}' ?? '',
                                           style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 7.0),
                                           child: Text(
-                                            widget.infoUser.objectiveWeight != null ? 'kg' : '',
+                                            widget.infoUser.objectiveWeight != null ? getUnitOfMeasure(widget.infoUser.retardedUnits) : '',
                                             style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -304,12 +305,12 @@ class _GoalsScreenState extends State<GoalsScreen> {
                                   child: WeightSlider(
                                     controller: ScrollController(),
                                     minValue: 1,
-                                    maxValue: 500,
-                                    width: MediaQuery.of(context).size.width,
-                                    value: widget.infoUser.objectiveWeight,
+                                    maxValue: 1000,
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    value: getValueFromDBWeightAsDouble(widget.infoUser.retardedUnits, widget.infoUser.objectiveWeight),
                                     onChanged: (value) {
                                       setState(() {
-                                        widget.infoUser.objectiveWeight = value;
+                                        widget.infoUser.objectiveWeight = getValueToDBWeightAsDouble(widget.infoUser.retardedUnits, value);
                                       });
                                     },
                                   ),
@@ -332,7 +333,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                         color: AppThemes.BLACK_BLUE,
                         child: Center(
                             child: Text(
-                          'Objetivos desactivados',
+                          DemoLocalizations.of(context).goalsDisabled,
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
                         )),
                       ),

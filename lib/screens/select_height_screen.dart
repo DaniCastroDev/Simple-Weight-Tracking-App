@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
 import 'package:simple_weight_tracking_app/model/info_user.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_picker.dart';
 
 class HeightScreen extends StatefulWidget {
@@ -97,16 +98,31 @@ class _HeightScreenState extends State<HeightScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            '${widget.infoUser.height.toInt()}' ?? '',
+                            '${getCorrectHeight(widget.infoUser.retardedUnits, widget.infoUser.height)}' ?? '',
                             style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 7.0),
                             child: Text(
-                              widget.infoUser.height != null ? 'cm' : '',
+                              widget.infoUser.height != null ? widget.infoUser.retardedUnits ? '' : 'cm' : '',
                               style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                             ),
                           ),
+                          widget.infoUser.retardedUnits
+                              ? Text(
+                                  '${widget.infoUser.height.toStringAsFixed(0)}' ?? '',
+                                  style: TextStyle(color: AppThemes.GREY, fontSize: 20.0, fontWeight: FontWeight.bold),
+                                )
+                              : Container(),
+                          widget.infoUser.retardedUnits
+                              ? Padding(
+                                  padding: const EdgeInsets.only(bottom: 3.0),
+                                  child: Text(
+                                    widget.infoUser.height != null ? 'cm' : '',
+                                    style: TextStyle(color: AppThemes.GREY, fontSize: 10.0, fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),

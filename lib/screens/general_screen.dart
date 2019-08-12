@@ -10,6 +10,7 @@ import 'package:simple_weight_tracking_app/screens/add_weight_screen.dart';
 import 'package:simple_weight_tracking_app/screens/history_screen.dart';
 import 'package:simple_weight_tracking_app/utils/bmi.dart';
 import 'package:simple_weight_tracking_app/utils/fade_transition.dart';
+import 'package:simple_weight_tracking_app/utils/units.dart';
 import 'package:simple_weight_tracking_app/widgets/bmi_graphic.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_chart.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_register_card.dart';
@@ -23,10 +24,9 @@ class GeneralScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isRetardUnits = false;
     Weight currentWeight = weights.last;
     _calculateBMI() {
-      double ibm = calculateIBM(currentWeight.weight, infoUser.height);
+      double ibm = calculateIBM(lbToKg(currentWeight.weight), infoUser.height);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -79,11 +79,11 @@ class GeneralScreen extends StatelessWidget {
       List<WeightRegisterCard> cards = [];
       if (weights.length > 7) {
         for (int i = 6; i >= 0; i--) {
-          cards.add(WeightRegisterCard(weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
+          cards.add(WeightRegisterCard(isRetarded: infoUser.retardedUnits, weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
         }
       } else {
         for (int i = weights.length - 1; i >= 0; i--) {
-          cards.add(WeightRegisterCard(weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
+          cards.add(WeightRegisterCard(isRetarded: infoUser.retardedUnits, weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
         }
       }
 
@@ -102,7 +102,7 @@ class GeneralScreen extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () => Navigator.of(context).push(FadeTransitionRoute(widget: HistoryScreen(weights))),
+                onTap: () => Navigator.of(context).push(FadeTransitionRoute(widget: HistoryScreen(weights, infoUser))),
                 child: Text(
                   DemoLocalizations.of(context).seeAll,
                   style: TextStyle(color: AppThemes.CYAN, fontSize: 15.0, fontWeight: FontWeight.bold),
@@ -123,95 +123,99 @@ class GeneralScreen extends StatelessWidget {
       );
     }
 
-    String _getUnitOfMeasure() {
-      return isRetardUnits ? 'lb' : 'kg';
-    }
-
-    String _getCorrectWeight(double weight) {
-      return isRetardUnits ? kgToLb(weight).toStringAsFixed(1) : weight.toStringAsFixed(1);
-    }
-
     _goalProgress() {
       return Column(
         children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: (MediaQuery.of(context).size.width - 40) / 3),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              getCorrectWeight(infoUser.retardedUnits, infoUser.initialWeight),
+                              style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Text(
+                                getUnitOfMeasure(infoUser.retardedUnits),
+                                style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight),
+                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: (MediaQuery.of(context).size.width - 40) / 3),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Text(
-                          _getCorrectWeight(infoUser.initialWeight),
-                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                          getCorrectWeight(infoUser.retardedUnits, currentWeight.weight),
+                          style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 600 ? 45.0 : 30.0, fontWeight: FontWeight.bold),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
+                          padding: const EdgeInsets.only(bottom: 9.0),
                           child: Text(
-                            _getUnitOfMeasure(),
-                            style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
+                            getUnitOfMeasure(infoUser.retardedUnits),
+                            style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 600 ? 20.0 : 14.0, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
                     ),
-                    Text(
-                      DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateInitialWeight),
-                      style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      _getCorrectWeight(currentWeight.weight),
-                      style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 700 ? 50.0 : 40.0, fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 9.0),
-                      child: Text(
-                        _getUnitOfMeasure(),
-                        style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height > 700 ? 20.0 : 14.0, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: (MediaQuery.of(context).size.width - 40) / 3),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Column(
                       children: <Widget>[
-                        Text(
-                          _getCorrectWeight(infoUser.objectiveWeight),
-                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              getCorrectWeight(infoUser.retardedUnits, infoUser.objectiveWeight),
+                              style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 30.0 : 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Text(
+                                getUnitOfMeasure(infoUser.retardedUnits),
+                                style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Text(
-                            _getUnitOfMeasure(),
-                            style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 14.0 : 10.0, fontWeight: FontWeight.bold),
-                          ),
+                        Text(
+                          DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight),
+                          style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 600 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    Text(
-                      DateFormat.yMd(DemoLocalizations.of(context).locale.languageCode).format(infoUser.dateObjectiveWeight),
-                      style: TextStyle(color: AppThemes.GREY, fontSize: MediaQuery.of(context).size.height > 700 ? 17.0 : 14.0, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           LinearPercentIndicator(
             padding: EdgeInsets.all(0.0),
@@ -262,6 +266,7 @@ class GeneralScreen extends StatelessWidget {
                       Navigator.of(context).push(FadeTransitionRoute(
                           widget: SelectWeightScreen(
                         user: user,
+                        infoUser: infoUser,
                       )));
                     },
                   ),
@@ -291,7 +296,7 @@ class GeneralScreen extends StatelessWidget {
                             ? WeightChart(
                                 objectiveWeights: predictedWeights,
                                 weights: weights,
-                                isRetardUnits: isRetardUnits,
+                                isRetardUnits: infoUser.retardedUnits,
                               )
                             : Container(
                                 height: 200.0,

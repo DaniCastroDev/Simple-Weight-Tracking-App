@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:simple_weight_tracking_app/appthemes.dart';
 import 'package:simple_weight_tracking_app/intl/localizations_delegate.dart';
+import 'package:simple_weight_tracking_app/model/info_user.dart';
 import 'package:simple_weight_tracking_app/model/weight.dart';
 import 'package:simple_weight_tracking_app/widgets/weight_register_card.dart';
 
 class HistoryScreen extends StatelessWidget {
   final List<Weight> weights;
+  final InfoUser infoUser;
 
-  HistoryScreen(this.weights);
+  HistoryScreen(this.weights, this.infoUser);
 
   @override
   Widget build(BuildContext context) {
     List<WeightRegisterCard> cards = [];
     for (int i = weights.length - 1; i >= 0; i--) {
-      cards.add(WeightRegisterCard(weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
+      cards.add(WeightRegisterCard(isRetarded: infoUser.retardedUnits, weight: weights[i], difference: i > 0 ? weights[i].weight - weights[i - 1].weight : null));
     }
     return Scaffold(
       backgroundColor: AppThemes.BLACK_BLUE,
